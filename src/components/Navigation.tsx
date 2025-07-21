@@ -16,34 +16,34 @@ const Navigation = () => {
   ];
 
   return (
-    <nav className="bg-card shadow-sm sticky top-0 z-50">
+    <nav className="bg-card shadow-sm sticky top-0 z-50 border-b">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <NavLink to="/" className="flex items-center space-x-3">
             <img 
               src="/lovable-uploads/120a1810-4f10-43f7-bca8-c4ce25963e03.png" 
               alt="Zakia Relief Logo" 
-              className="h-12 w-auto"
+              className="h-14 w-auto"
             />
           </NavLink>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-10">
             {navItems.map((item) => (
               <NavLink
                 key={item.path}
                 to={item.path}
                 className={({ isActive }) =>
-                  `transition-smooth hover:text-primary ${
-                    isActive ? 'text-primary font-medium' : 'text-foreground'
+                  `transition-smooth hover:text-primary text-lg font-medium ${
+                    isActive ? 'text-primary' : 'text-secondary'
                   }`
                 }
               >
                 {item.label}
               </NavLink>
             ))}
-            <Button asChild variant="default" className="hero-gradient">
+            <Button asChild className="gold-gradient text-white hover:opacity-90 px-6 py-3">
               <NavLink to="/donate">Donate Now</NavLink>
             </Button>
           </div>
@@ -81,7 +81,7 @@ const Navigation = () => {
                 </NavLink>
               ))}
               <div className="px-3 py-2">
-                <Button asChild variant="default" className="hero-gradient w-full">
+                <Button asChild className="gold-gradient text-white w-full px-6 py-3">
                   <NavLink to="/donate" onClick={() => setIsOpen(false)}>
                     Donate Now
                   </NavLink>

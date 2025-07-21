@@ -2,50 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Zakia Relief Design System - Inspired by Mauritania's warm, earthy landscape */
+/* Zakia Relief Design System - Professional & Community-Centered */
 
 @layer base {
   :root {
-    --background: 45 20% 98%;
-    --foreground: 30 15% 15%;
+    /* Base colors - cream background */
+    --background: 45 25% 97%;
+    --foreground: 20 15% 20%;
 
     --card: 0 0% 100%;
-    --card-foreground: 30 15% 15%;
+    --card-foreground: 20 15% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 30 15% 15%;
+    --popover-foreground: 20 15% 20%;
 
-    /* Primary: Warm golden sand */
-    --primary: 38 85% 55%;
+    /* Primary: Warm gold from logo */
+    --primary: 45 75% 45%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 42 90% 65%;
+    --primary-glow: 45 80% 55%;
 
-    /* Secondary: Deep earth brown */
-    --secondary: 25 35% 25%;
-    --secondary-foreground: 45 20% 95%;
+    /* Secondary: Deep forest green from logo */
+    --secondary: 140 35% 15%;
+    --secondary-foreground: 45 25% 95%;
 
-    /* Muted: Soft desert tone */
-    --muted: 40 25% 90%;
-    --muted-foreground: 30 15% 45%;
+    /* Muted: Soft cream tones */
+    --muted: 45 20% 92%;
+    --muted-foreground: 20 15% 45%;
 
-    /* Accent: Oasis green */
-    --accent: 150 30% 45%;
+    /* Accent: Rich earth green */
+    --accent: 140 40% 25%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 40 20% 85%;
-    --input: 40 20% 85%;
-    --ring: 38 85% 55%;
+    --border: 45 15% 85%;
+    --input: 45 15% 85%;
+    --ring: 45 75% 45%;
 
     --radius: 0.75rem;
 
-    /* Custom design tokens for Zakia Relief */
-    --hero-gradient: linear-gradient(135deg, hsl(38 85% 55%), hsl(42 90% 65%));
-    --impact-gradient: linear-gradient(45deg, hsl(150 30% 45%), hsl(160 35% 50%));
-    --warm-shadow: 0 10px 30px -10px hsl(38 85% 55% / 0.2);
-    --soft-shadow: 0 4px 16px -4px hsl(30 15% 15% / 0.1);
+    /* Custom design tokens for professional Zakia Relief */
+    --hero-gradient: linear-gradient(135deg, hsl(140 35% 15%), hsl(140 30% 25%));
+    --gold-gradient: linear-gradient(135deg, hsl(45 75% 45%), hsl(45 80% 55%));
+    --community-gradient: linear-gradient(45deg, hsl(140 40% 25%), hsl(140 35% 30%));
+    --warm-shadow: 0 10px 30px -10px hsl(140 35% 15% / 0.15);
+    --soft-shadow: 0 4px 16px -4px hsl(20 15% 20% / 0.08);
     
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -120,8 +122,12 @@
     background: var(--hero-gradient);
   }
   
-  .impact-gradient {
-    background: var(--impact-gradient);
+  .gold-gradient {
+    background: var(--gold-gradient);
+  }
+  
+  .community-gradient {
+    background: var(--community-gradient);
   }
   
   .warm-shadow {
