@@ -205,11 +205,11 @@ const Donate = () => {
                       <div className="space-y-2 text-sm text-green-700">
                         <div className="flex items-start">
                           <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 mr-2 flex-shrink-0" />
-                          <span>Open your Bankily app and select "Send Money"</span>
+                          <span>Click "Open Bankily App" button below (or open manually and select "Send Money")</span>
                         </div>
                         <div className="flex items-start">
                           <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 mr-2 flex-shrink-0" />
-                          <span>Enter the phone number: <strong>+222 43727240</strong></span>
+                          <span>Enter or paste the phone number: <strong>+222 43727240</strong> (auto-copied)</span>
                         </div>
                         <div className="flex items-start">
                           <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 mr-2 flex-shrink-0" />
@@ -234,29 +234,76 @@ const Donate = () => {
                     size="lg" 
                     className="bg-green-600 hover:bg-green-700 text-white w-full shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 py-4"
                     onClick={() => {
-                      // Try to open Bankily app with deep link
-                      const bankilyUrl = 'bankily://send?phone=22243727240&reference=Zakia+Relief+Donation';
-                      const bankilyWebUrl = 'https://bankily.mr/send?phone=22243727240&reference=Zakia+Relief+Donation';
+                      // Copy phone number to clipboard
+                      navigator.clipboard.writeText('+222 43727240');
                       
-                      // For mobile devices, try to open the app
+                      // Try to open Bankily app on mobile devices
                       if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                        // Try deep link first
-                        window.location.href = bankilyUrl;
+                        // Try different potential deep links and universal links for Bankily
+                        const attemptToOpenApp = () => {
+                          const possibleLinks = [
+                            'bankily://',
+                            'https://bankily.mr/app',
+                            'https://www.bankily.mr/app',
+                            'mr.bankily.app://',
+                          ];
+                          
+                          let linkIndex = 0;
+                          const tryNextLink = () => {
+                            if (linkIndex < possibleLinks.length) {
+                              const currentLink = possibleLinks[linkIndex];
+                              
+                              // Create a hidden iframe to test the link
+                              const iframe = document.createElement('iframe');
+                              iframe.style.display = 'none';
+                              iframe.src = currentLink;
+                              document.body.appendChild(iframe);
+                              
+                              // Clean up after a short delay
+                              setTimeout(() => {
+                                document.body.removeChild(iframe);
+                                linkIndex++;
+                                if (linkIndex < possibleLinks.length) {
+                                  tryNextLink();
+                                }
+                              }, 500);
+                              
+                              // Also try window.location as backup
+                              setTimeout(() => {
+                                try {
+                                  window.location.href = currentLink;
+                                } catch (e) {
+                                  // Ignore errors and continue
+                                }
+                              }, 100);
+                            }
+                          };
+                          
+                          tryNextLink();
+                        };
                         
-                        // Fallback: try web URL after a short delay
-                        setTimeout(() => {
-                          window.open(bankilyWebUrl, '_blank');
-                        }, 1000);
+                        // Attempt to open the app
+                        attemptToOpenApp();
                         
-                        // Also copy the number as backup
-                        navigator.clipboard.writeText('+222 43727240');
+                        // Show success message
                         toast({
                           title: "Opening Bankily App...",
-                          description: "If the app doesn't open, the phone number has been copied to your clipboard.",
+                          description: "Phone number copied! If app doesn't open, open Bankily manually and paste the number.",
                         });
+                        
+                        // Fallback: Try to open app store after delay if app didn't open
+                        setTimeout(() => {
+                          if (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad')) {
+                            // Try iOS App Store - this link should redirect to app if installed
+                            window.open('https://apps.apple.com/us/app/bankily/id1445890693', '_blank');
+                          } else if (navigator.userAgent.includes('Android')) {
+                            // Try Google Play Store
+                            window.open('https://play.google.com/store/apps/details?id=mr.bankily.mobile', '_blank');
+                          }
+                        }, 2000);
+                        
                       } else {
-                        // For desktop, copy number and show instructions
-                        navigator.clipboard.writeText('+222 43727240');
+                        // Desktop users
                         toast({
                           title: "Phone Number Copied!",
                           description: "Please open Bankily on your mobile device and send to +222 43727240",
@@ -268,25 +315,46 @@ const Donate = () => {
                     Open Bankily App
                   </Button>
                   
-                  <Button 
-                    type="button" 
-                    size="sm" 
-                    variant="outline" 
-                    className="w-full border-green-200 text-green-700 hover:bg-green-50"
-                    onClick={() => {
-                      navigator.clipboard.writeText('+222 43727240');
-                      toast({
-                        title: "Phone Number Copied!",
-                        description: "The number +222 43727240 has been copied to your clipboard.",
-                      });
-                    }}
-                  >
-                    <Copy className="h-4 w-4 mr-2" />
-                    Just Copy Phone Number
-                  </Button>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <Button 
+                      type="button" 
+                      size="sm" 
+                      variant="outline" 
+                      className="border-green-200 text-green-700 hover:bg-green-50"
+                      onClick={() => {
+                        navigator.clipboard.writeText('+222 43727240');
+                        toast({
+                          title: "Phone Number Copied!",
+                          description: "The number +222 43727240 has been copied to your clipboard.",
+                        });
+                      }}
+                    >
+                      <Copy className="h-4 w-4 mr-2" />
+                      Just Copy Number
+                    </Button>
+                    
+                    <Button 
+                      type="button" 
+                      size="sm" 
+                      variant="outline" 
+                      className="border-blue-200 text-blue-700 hover:bg-blue-50"
+                      onClick={() => {
+                        if (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad')) {
+                          window.open('https://apps.apple.com/us/app/bankily/id1445890693', '_blank');
+                        } else if (navigator.userAgent.includes('Android')) {
+                          window.open('https://play.google.com/store/apps/details?id=mr.bankily.mobile', '_blank');
+                        } else {
+                          window.open('https://bankily.mr', '_blank');
+                        }
+                      }}
+                    >
+                      <Smartphone className="h-4 w-4 mr-2" />
+                      Get Bankily App
+                    </Button>
+                  </div>
                   
                   <p className="text-center text-sm text-muted-foreground">
-                    Use the main button to open Bankily directly, or copy the number manually if needed
+                    Main button opens Bankily automatically. Use backup options if needed.
                   </p>
                 </div>
               </div>
