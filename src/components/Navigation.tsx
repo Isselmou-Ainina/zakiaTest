@@ -1,20 +1,31 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Menu, X, Heart } from 'lucide-react';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
   const navItems = [
     { path: '/', label: 'Home' },
-    { path: '/our-work', label: 'Our Work' },
     { path: '/about', label: 'About Us' },
+    { path: '/our-work', label: 'Our Work' },
     { path: '/get-involved', label: 'Get Involved' },
     { path: '/contact', label: 'Contact' }
   ];
 
   const closeMenu = () => setIsOpen(false);
+
+  const handleLogoClick = (e) => {
+    closeMenu();
+    // If already on homepage, scroll to top smoothly
+    if (location.pathname === '/') {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    // If on other pages, navigation will happen normally via NavLink
+  };
 
   return (
     <nav className="bg-card border-b border-border sticky top-0 z-50 backdrop-blur-sm bg-card/95" role="navigation" aria-label="Main navigation">
@@ -24,7 +35,7 @@ const Navigation = () => {
           <NavLink 
             to="/" 
             className="flex items-center space-x-3 transition-gentle hover:opacity-80 focus:outline-2 focus:outline-primary rounded-md p-1" 
-            onClick={closeMenu}
+            onClick={handleLogoClick}
           >
             <img 
               src="/zakia_transparent_logo.png" 

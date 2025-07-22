@@ -1,4 +1,4 @@
-import { Heart, Phone, Mail, MapPin } from 'lucide-react';
+import { Heart, Phone, Mail, MapPin, Facebook, Instagram, MessageCircle } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
 const Footer = () => {
@@ -12,7 +12,7 @@ const Footer = () => {
               <img 
                 src="/zakia_transparent_logo.png" 
                 alt="Zakia Relief - Building Stronger Communities" 
-                className="h-12 md:h-14 w-auto"
+                className="h-16 md:h-20 w-auto"
               />
               <div>
                 <h3 className="text-lg md:text-xl font-semibold text-white">Zakia Relief</h3>
@@ -23,9 +23,40 @@ const Footer = () => {
               Zakia Relief is dedicated to uplifting vulnerable communities in Mauritania through 
               sustainable programs focused on food security, clean water access, and environmental stewardship.
             </p>
-            <div className="flex items-center text-sm md:text-base">
+            <div className="flex items-center text-sm md:text-base mb-6">
               <Heart className="h-4 w-4 md:h-5 md:w-5 mr-2 text-secondary opacity-80" />
               <span className="opacity-90">Making a difference since 2018</span>
+            </div>
+            
+            {/* Social Links */}
+            <div>
+              <h4 className="font-medium mb-3 text-white text-sm md:text-base">Follow Us</h4>
+              <div className="flex items-center space-x-4">
+                <a 
+                  href="#" 
+                  className="group flex items-center space-x-2 hover:text-secondary transition-all duration-300 opacity-90 hover:opacity-100"
+                  title="Follow us on Facebook"
+                >
+                  <Facebook className="h-5 w-5 md:h-6 md:w-6 group-hover:scale-110 transition-transform duration-300" />
+                  <span className="text-sm">Facebook</span>
+                </a>
+                <a 
+                  href="#" 
+                  className="group flex items-center space-x-2 hover:text-secondary transition-all duration-300 opacity-90 hover:opacity-100"
+                  title="Follow us on Instagram"
+                >
+                  <Instagram className="h-5 w-5 md:h-6 md:w-6 group-hover:scale-110 transition-transform duration-300" />
+                  <span className="text-sm">Instagram</span>
+                </a>
+                <a 
+                  href="#" 
+                  className="group flex items-center space-x-2 hover:text-secondary transition-all duration-300 opacity-90 hover:opacity-100"
+                  title="Contact us on WhatsApp"
+                >
+                  <MessageCircle className="h-5 w-5 md:h-6 md:w-6 group-hover:scale-110 transition-transform duration-300" />
+                  <span className="text-sm">WhatsApp</span>
+                </a>
+              </div>
             </div>
           </div>
 
@@ -35,18 +66,18 @@ const Footer = () => {
             <ul className="space-y-2 md:space-y-3 text-sm md:text-base">
               <li>
                 <NavLink 
-                  to="/our-work" 
-                  className="hover:text-secondary transition-gentle opacity-90 hover:opacity-100 block py-1"
-                >
-                  Our Work
-                </NavLink>
-              </li>
-              <li>
-                <NavLink 
                   to="/about" 
                   className="hover:text-secondary transition-gentle opacity-90 hover:opacity-100 block py-1"
                 >
                   About Us
+                </NavLink>
+              </li>
+              <li>
+                <NavLink 
+                  to="/our-work" 
+                  className="hover:text-secondary transition-gentle opacity-90 hover:opacity-100 block py-1"
+                >
+                  Our Work
                 </NavLink>
               </li>
               <li>
@@ -76,7 +107,6 @@ const Footer = () => {
                 <MapPin className="h-4 w-4 md:h-5 md:w-5 mt-0.5 text-secondary opacity-80 flex-shrink-0" />
                 <div className="opacity-90">
                   <p>Nouakchott, Mauritania</p>
-                  <p className="text-xs md:text-sm opacity-75">West Africa</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
@@ -90,7 +120,6 @@ const Footer = () => {
                 <Mail className="h-4 w-4 md:h-5 md:w-5 text-secondary opacity-80 flex-shrink-0" />
                 <div className="opacity-90">
                   <p>info@zakiarelief.org</p>
-                  <p className="text-xs md:text-sm opacity-75">24hr response</p>
                 </div>
               </div>
             </div>

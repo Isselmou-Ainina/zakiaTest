@@ -268,4 +268,13 @@
   .impact-label {
     @apply text-sm md:text-base text-muted-foreground font-medium;
   }
+
+  /* Hero background image class */
+  .hero-bg {
+    background-image: url('/zakia_transparent_logo.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+  }
 }
