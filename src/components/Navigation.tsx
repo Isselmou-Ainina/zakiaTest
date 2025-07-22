@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Heart } from 'lucide-react';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,85 +11,105 @@ const Navigation = () => {
     { path: '/our-work', label: 'Our Work' },
     { path: '/about', label: 'About Us' },
     { path: '/get-involved', label: 'Get Involved' },
-    { path: '/donate', label: 'Donate' },
     { path: '/contact', label: 'Contact' }
   ];
 
+  const closeMenu = () => setIsOpen(false);
+
   return (
-    <nav className="bg-card shadow-sm sticky top-0 z-50 border-b">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+    <nav className="bg-card border-b border-border sticky top-0 z-50 backdrop-blur-sm bg-card/95" role="navigation" aria-label="Main navigation">
+      <div className="max-w-6xl mx-auto container-padding">
+        <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <NavLink to="/" className="flex items-center space-x-3">
+          <NavLink 
+            to="/" 
+            className="flex items-center space-x-3 transition-gentle hover:opacity-80 focus:outline-2 focus:outline-primary rounded-md p-1" 
+            onClick={closeMenu}
+          >
             <img 
-              src="/lovable-uploads/120a1810-4f10-43f7-bca8-c4ce25963e03.png" 
-              alt="Zakia Relief Logo" 
-              className="h-14 w-auto"
+              src="/zakia_transparent_logo.png" 
+              alt="Zakia Relief - Building Stronger Communities" 
+              className="h-12 md:h-16 w-auto"
             />
+            <div className="hidden sm:block">
+              <h1 className="text-lg md:text-xl font-semibold text-foreground">Zakia Relief</h1>
+              <p className="text-xs text-muted-foreground">Building Communities</p>
+            </div>
           </NavLink>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-10">
+          <div className="hidden lg:flex items-center space-x-8">
             {navItems.map((item) => (
               <NavLink
                 key={item.path}
                 to={item.path}
                 className={({ isActive }) =>
-                  `transition-smooth hover:text-primary text-lg font-medium ${
-                    isActive ? 'text-primary' : 'text-secondary'
+                  `transition-gentle hover:text-primary text-base font-medium touch-target flex items-center justify-center px-3 py-2 rounded-md ${
+                    isActive ? 'text-primary font-semibold' : 'text-foreground'
                   }`
                 }
               >
                 {item.label}
               </NavLink>
             ))}
-            <Button asChild className="gold-gradient text-white hover:opacity-90 px-6 py-3">
-              <NavLink to="/donate">Donate Now</NavLink>
+            <Button asChild className="community-gradient text-white hover:opacity-90 touch-target ml-4">
+              <NavLink to="/donate" className="flex items-center">
+                <Heart className="h-4 w-4 mr-2" />
+                Donate
+              </NavLink>
             </Button>
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsOpen(!isOpen)}
+            className="lg:hidden touch-target p-2"
+            aria-expanded={isOpen}
+            aria-controls="mobile-menu"
+            aria-label={isOpen ? 'Close menu' : 'Open menu'}
+          >
+            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </Button>
         </div>
 
         {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-card border-t">
-              {navItems.map((item) => (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  className={({ isActive }) =>
-                    `block px-3 py-2 rounded-md text-base font-medium transition-smooth ${
-                      isActive
-                        ? 'text-primary bg-muted'
-                        : 'text-foreground hover:text-primary hover:bg-muted'
-                    }`
-                  }
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.label}
+        <div 
+          id="mobile-menu"
+          className={`lg:hidden transition-all duration-300 ease-in-out ${
+            isOpen 
+              ? 'max-h-screen opacity-100 pb-6' 
+              : 'max-h-0 opacity-0 overflow-hidden'
+          }`}
+        >
+          <div className="pt-4 pb-3 space-y-1 border-t border-border mt-4">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) =>
+                  `block px-4 py-3 rounded-lg text-base font-medium transition-gentle touch-target ${
+                    isActive
+                      ? 'text-primary bg-primary/10 border-l-4 border-primary'
+                      : 'text-foreground hover:text-primary hover:bg-muted'
+                  }`
+                }
+                onClick={closeMenu}
+              >
+                {item.label}
+              </NavLink>
+            ))}
+            <div className="pt-4">
+              <Button asChild className="community-gradient text-white w-full touch-target">
+                <NavLink to="/donate" onClick={closeMenu} className="flex items-center justify-center">
+                  <Heart className="h-4 w-4 mr-2" />
+                  Donate Now
                 </NavLink>
-              ))}
-              <div className="px-3 py-2">
-                <Button asChild className="gold-gradient text-white w-full px-6 py-3">
-                  <NavLink to="/donate" onClick={() => setIsOpen(false)}>
-                    Donate Now
-                  </NavLink>
-                </Button>
-              </div>
+              </Button>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </nav>
   );

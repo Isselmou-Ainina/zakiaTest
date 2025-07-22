@@ -25,9 +25,10 @@ const OurWork = () => {
         "Installation of community water points",
         "Water filtration system maintenance",
         "Hygiene and sanitation education",
-        "Emergency water distribution"
+        "Emergency water distribution",
+        "Mobile water delivery services"
       ],
-      impact: "5 new water points established"
+      impact: "300+ tons of water delivered"
     },
     {
       icon: TreePine,
