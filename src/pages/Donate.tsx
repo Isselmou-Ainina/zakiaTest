@@ -200,28 +200,44 @@ const Donate = () => {
                       <p className="text-2xl font-bold text-green-800 tracking-wider">+222 43727240</p>
                     </div>
                     
-                    <div className="space-y-3">
-                      <h4 className="font-semibold text-green-800 mb-2">How to send via Bankily:</h4>
-                      <div className="space-y-2 text-sm text-green-700">
-                        <div className="flex items-start">
-                          <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 mr-2 flex-shrink-0" />
-                          <span>Click "Open Bankily App" button below (or open manually and select "Send Money")</span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Instructions */}
+                      <div className="space-y-3">
+                        <h4 className="font-semibold text-green-800 mb-2">How to send via Bankily:</h4>
+                        <div className="space-y-2 text-sm text-green-700">
+                          <div className="flex items-start">
+                            <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 mr-2 flex-shrink-0" />
+                            <span>Open your Bankily app and select "Send Money"</span>
+                          </div>
+                          <div className="flex items-start">
+                            <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 mr-2 flex-shrink-0" />
+                            <span>Enter the phone number: <strong>+222 43727240</strong></span>
+                          </div>
+                          <div className="flex items-start">
+                            <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 mr-2 flex-shrink-0" />
+                            <span>Enter your donation amount in MRU</span>
+                          </div>
+                          <div className="flex items-start">
+                            <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 mr-2 flex-shrink-0" />
+                            <span>Add "Zakia Relief Donation" in the reference/note field</span>
+                          </div>
+                          <div className="flex items-start">
+                            <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 mr-2 flex-shrink-0" />
+                            <span>Confirm and complete your transfer</span>
+                          </div>
                         </div>
-                        <div className="flex items-start">
-                          <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 mr-2 flex-shrink-0" />
-                          <span>Enter or paste the phone number: <strong>+222 43727240</strong> (auto-copied)</span>
-                        </div>
-                        <div className="flex items-start">
-                          <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 mr-2 flex-shrink-0" />
-                          <span>Enter your donation amount in MRU</span>
-                        </div>
-                        <div className="flex items-start">
-                          <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 mr-2 flex-shrink-0" />
-                          <span>Add "Zakia Relief Donation" in the reference/note field</span>
-                        </div>
-                        <div className="flex items-start">
-                          <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 mr-2 flex-shrink-0" />
-                          <span>Confirm and complete your transfer</span>
+                      </div>
+
+                      {/* QR Code */}
+                      <div className="space-y-3">
+                        <h4 className="font-semibold text-green-800 mb-2">Or scan QR code:</h4>
+                        <div className="bg-white rounded-lg p-4 border border-green-100 text-center">
+                          <img 
+                            src="/bankily_qr_code.jpeg" 
+                            alt="Bankily QR Code for Zakia Relief donations"
+                            className="w-48 h-48 mx-auto object-contain rounded-lg shadow-sm"
+                          />
+                          <p className="text-xs text-gray-600 mt-2">Scan with Bankily app</p>
                         </div>
                       </div>
                     </div>
@@ -237,73 +253,13 @@ const Donate = () => {
                       // Copy phone number to clipboard
                       navigator.clipboard.writeText('+222 43727240');
                       
-                      // Try to open Bankily app on mobile devices
+                      // Show instructions based on device type
                       if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                        // Try different potential deep links and universal links for Bankily
-                        const attemptToOpenApp = () => {
-                          const possibleLinks = [
-                            'bankily://',
-                            'https://bankily.mr/app',
-                            'https://www.bankily.mr/app',
-                            'mr.bankily.app://',
-                          ];
-                          
-                          let linkIndex = 0;
-                          const tryNextLink = () => {
-                            if (linkIndex < possibleLinks.length) {
-                              const currentLink = possibleLinks[linkIndex];
-                              
-                              // Create a hidden iframe to test the link
-                              const iframe = document.createElement('iframe');
-                              iframe.style.display = 'none';
-                              iframe.src = currentLink;
-                              document.body.appendChild(iframe);
-                              
-                              // Clean up after a short delay
-                              setTimeout(() => {
-                                document.body.removeChild(iframe);
-                                linkIndex++;
-                                if (linkIndex < possibleLinks.length) {
-                                  tryNextLink();
-                                }
-                              }, 500);
-                              
-                              // Also try window.location as backup
-                              setTimeout(() => {
-                                try {
-                                  window.location.href = currentLink;
-                                } catch (e) {
-                                  // Ignore errors and continue
-                                }
-                              }, 100);
-                            }
-                          };
-                          
-                          tryNextLink();
-                        };
-                        
-                        // Attempt to open the app
-                        attemptToOpenApp();
-                        
-                        // Show success message
                         toast({
-                          title: "Opening Bankily App...",
-                          description: "Phone number copied! If app doesn't open, open Bankily manually and paste the number.",
+                          title: "Phone Number Copied!",
+                          description: "Now open your Bankily app and send to +222 43727240 with reference: Zakia Relief Donation",
                         });
-                        
-                        // Fallback: Try to open app store after delay if app didn't open
-                        setTimeout(() => {
-                          if (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad')) {
-                            // Try iOS App Store - this link should redirect to app if installed
-                            window.open('https://apps.apple.com/us/app/bankily/id1445890693', '_blank');
-                          } else if (navigator.userAgent.includes('Android')) {
-                            // Try Google Play Store
-                            window.open('https://play.google.com/store/apps/details?id=mr.bankily.mobile', '_blank');
-                          }
-                        }, 2000);
-                        
                       } else {
-                        // Desktop users
                         toast({
                           title: "Phone Number Copied!",
                           description: "Please open Bankily on your mobile device and send to +222 43727240",
@@ -311,50 +267,14 @@ const Donate = () => {
                       }
                     }}
                   >
-                    <Smartphone className="h-5 w-5 mr-2" />
-                    Open Bankily App
+                    <Copy className="h-5 w-5 mr-2" />
+                    Copy Phone Number for Bankily
                   </Button>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    <Button 
-                      type="button" 
-                      size="sm" 
-                      variant="outline" 
-                      className="border-green-200 text-green-700 hover:bg-green-50"
-                      onClick={() => {
-                        navigator.clipboard.writeText('+222 43727240');
-                        toast({
-                          title: "Phone Number Copied!",
-                          description: "The number +222 43727240 has been copied to your clipboard.",
-                        });
-                      }}
-                    >
-                      <Copy className="h-4 w-4 mr-2" />
-                      Just Copy Number
-                    </Button>
-                    
-                    <Button 
-                      type="button" 
-                      size="sm" 
-                      variant="outline" 
-                      className="border-blue-200 text-blue-700 hover:bg-blue-50"
-                      onClick={() => {
-                        if (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad')) {
-                          window.open('https://apps.apple.com/us/app/bankily/id1445890693', '_blank');
-                        } else if (navigator.userAgent.includes('Android')) {
-                          window.open('https://play.google.com/store/apps/details?id=mr.bankily.mobile', '_blank');
-                        } else {
-                          window.open('https://bankily.mr', '_blank');
-                        }
-                      }}
-                    >
-                      <Smartphone className="h-4 w-4 mr-2" />
-                      Get Bankily App
-                    </Button>
-                  </div>
+
                   
                   <p className="text-center text-sm text-muted-foreground">
-                    Main button opens Bankily automatically. Use backup options if needed.
+                    Copy the phone number, then use Bankily app or scan the QR code to send your donation
                   </p>
                 </div>
               </div>
