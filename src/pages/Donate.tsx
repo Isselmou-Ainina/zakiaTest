@@ -234,19 +234,59 @@ const Donate = () => {
                     size="lg" 
                     className="bg-green-600 hover:bg-green-700 text-white w-full shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 py-4"
                     onClick={() => {
-                      navigator.clipboard.writeText('+222 43727240');
-                      toast({
-                        title: "Phone Number Copied!",
-                        description: `Please send your donation to +222 43727240 via Bankily. The number has been copied to your clipboard.`,
-                      });
+                      // Try to open Bankily app with deep link
+                      const bankilyUrl = 'bankily://send?phone=22243727240&reference=Zakia+Relief+Donation';
+                      const bankilyWebUrl = 'https://bankily.mr/send?phone=22243727240&reference=Zakia+Relief+Donation';
+                      
+                      // For mobile devices, try to open the app
+                      if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                        // Try deep link first
+                        window.location.href = bankilyUrl;
+                        
+                        // Fallback: try web URL after a short delay
+                        setTimeout(() => {
+                          window.open(bankilyWebUrl, '_blank');
+                        }, 1000);
+                        
+                        // Also copy the number as backup
+                        navigator.clipboard.writeText('+222 43727240');
+                        toast({
+                          title: "Opening Bankily App...",
+                          description: "If the app doesn't open, the phone number has been copied to your clipboard.",
+                        });
+                      } else {
+                        // For desktop, copy number and show instructions
+                        navigator.clipboard.writeText('+222 43727240');
+                        toast({
+                          title: "Phone Number Copied!",
+                          description: "Please open Bankily on your mobile device and send to +222 43727240",
+                        });
+                      }
                     }}
                   >
                     <Smartphone className="h-5 w-5 mr-2" />
-                    Copy Phone Number for Bankily Transfer
+                    Open Bankily App
+                  </Button>
+                  
+                  <Button 
+                    type="button" 
+                    size="sm" 
+                    variant="outline" 
+                    className="w-full border-green-200 text-green-700 hover:bg-green-50"
+                    onClick={() => {
+                      navigator.clipboard.writeText('+222 43727240');
+                      toast({
+                        title: "Phone Number Copied!",
+                        description: "The number +222 43727240 has been copied to your clipboard.",
+                      });
+                    }}
+                  >
+                    <Copy className="h-4 w-4 mr-2" />
+                    Just Copy Phone Number
                   </Button>
                   
                   <p className="text-center text-sm text-muted-foreground">
-                    Click above to copy the phone number, then send your donation through the Bankily app
+                    Use the main button to open Bankily directly, or copy the number manually if needed
                   </p>
                 </div>
               </div>
