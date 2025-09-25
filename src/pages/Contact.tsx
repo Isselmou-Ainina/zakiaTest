@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { MapPin, Phone, Mail, Send, MessageCircle, Copy } from 'lucide-react';
+import { MapPin, Phone, Mail, Send, MessageCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import emailjs from '@emailjs/browser';
@@ -117,7 +117,7 @@ const Contact = () => {
           </p>
           
           {/* Contact Info */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto text-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto text-center">
             <div className="space-y-2">
               <div className="flex items-center justify-center">
                 <MapPin className="h-5 w-5 text-primary mr-2" />
@@ -156,27 +156,12 @@ const Contact = () => {
                 <Mail className="h-5 w-5 text-primary mr-2" />
                 <span className="font-medium text-foreground">Email</span>
               </div>
-              <div className="flex items-center justify-center space-x-2">
-                <a 
-                  href="mailto:info@zakiarelief.org" 
-                  className="text-sm text-primary hover:text-primary/80 transition-colors cursor-pointer"
-                >
-                  info@zakiarelief.org
-                </a>
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText('info@zakiarelief.org');
-                    toast({
-                      title: "Email Copied!",
-                      description: "Email address copied to clipboard",
-                    });
-                  }}
-                  className="text-primary hover:text-primary/80 transition-colors"
-                  title="Copy email address"
-                >
-                  <Copy className="h-3 w-3" />
-                </button>
-              </div>
+              <a 
+                href="mailto:info@zakiarelief.org" 
+                className="text-sm text-primary hover:text-primary/80 transition-colors cursor-pointer"
+              >
+                info@zakiarelief.org
+              </a>
             </div>
           </div>
         </div>
