@@ -229,7 +229,7 @@ const About = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {[
               {
-                name: "Simo Boidaha",
+                name: "[Leader Name]",
                 title: "Program Director",
                 description: "Oversees our three core programs, ensuring effective delivery of food security, water access, and environmental initiatives.",
                 icon: Target
@@ -241,7 +241,7 @@ const About = () => {
                 icon: Handshake
               },
               {
-                name: "Khadijetou Bah",
+                name: "[Leader Name]",
                 title: "Finance & Administration Manager",
                 description: "Manages financial operations, ensures transparency, and handles administrative functions to support our mission.",
                 icon: Award
