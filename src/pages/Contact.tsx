@@ -4,9 +4,10 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { MapPin, Phone, Mail, Send } from 'lucide-react';
+import { MapPin, Phone, Mail, Send, MessageCircle, Copy } from 'lucide-react';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import emailjs from '@emailjs/browser';
 
 const Contact = () => {
   const { toast } = useToast();
@@ -16,19 +17,60 @@ const Contact = () => {
     subject: '',
     message: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Message Sent Successfully!",
-      description: "Thank you for reaching out. We'll get back to you within 24 hours.",
-    });
-    setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: ''
-    });
+    setIsSubmitting(true);
+    
+    try {
+      // EmailJS configuration from environment variables
+      const serviceId = import.meta.env.EMAILJS_SERVICE_ID;
+      const templateId = import.meta.env.EMAILJS_TEMPLATE_ID;
+      const publicKey = import.meta.env.EMAILJS_PUBLIC_KEY;
+      
+      // Check if environment variables are set
+      if (!serviceId || !templateId || !publicKey) {
+        throw new Error('EmailJS configuration is missing. Please check your environment variables.');
+      }
+      
+      // Initialize EmailJS
+      emailjs.init(publicKey);
+      
+      // Send email using EmailJS
+      const result = await emailjs.send(serviceId, templateId, {
+        from_name: formData.name,
+        from_email: formData.email,
+        subject: formData.subject || 'Contact from Zakia Relief Website',
+        message: formData.message,
+        to_email: 'info@zakiarelief.org'
+      });
+      
+      console.log('Email sent successfully:', result);
+      
+      toast({
+        title: "Message Sent Successfully!",
+        description: "Thank you for reaching out. We'll get back to you within 24 hours.",
+      });
+      
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      });
+      
+    } catch (error) {
+      console.error('Error sending email:', error);
+      toast({
+        title: "Error Sending Message",
+        description: "There was an issue sending your message. Please try again or contact us directly at info@zakiarelief.org",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
 
@@ -75,7 +117,7 @@ const Contact = () => {
           </p>
           
           {/* Contact Info */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto text-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto text-center">
             <div className="space-y-2">
               <div className="flex items-center justify-center">
                 <MapPin className="h-5 w-5 text-primary mr-2" />
@@ -88,34 +130,53 @@ const Contact = () => {
                 <Phone className="h-5 w-5 text-primary mr-2" />
                 <span className="font-medium text-foreground">Phone</span>
               </div>
-              <div className="space-y-1">
-                <a 
-                  href="tel:+22243727240" 
-                  className="text-sm text-primary hover:text-primary/80 transition-colors cursor-pointer block"
-                >
-                  +222 43 72 72 40
-                </a>
-                <a 
-                  href="https://wa.me/22243727240" 
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs text-green-600 hover:text-green-700 transition-colors cursor-pointer"
-                >
-                  📱 WhatsApp
-                </a>
+              <a 
+                href="tel:+22243727240" 
+                className="text-sm text-primary hover:text-primary/80 transition-colors cursor-pointer block"
+              >
+                +222 43 72 72 40
+              </a>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-center">
+                <MessageCircle className="h-5 w-5 text-green-600 mr-2" />
+                <span className="font-medium text-foreground">WhatsApp</span>
               </div>
+              <a 
+                href="https://wa.me/22243727240" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-green-600 hover:text-green-700 transition-colors cursor-pointer"
+              >
+                Chat with us
+              </a>
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-center">
                 <Mail className="h-5 w-5 text-primary mr-2" />
                 <span className="font-medium text-foreground">Email</span>
               </div>
-              <a 
-                href="mailto:info@zakiarelief.org" 
-                className="text-sm text-primary hover:text-primary/80 transition-colors cursor-pointer"
-              >
-                info@zakiarelief.org
-              </a>
+              <div className="flex items-center justify-center space-x-2">
+                <a 
+                  href="mailto:info@zakiarelief.org" 
+                  className="text-sm text-primary hover:text-primary/80 transition-colors cursor-pointer"
+                >
+                  info@zakiarelief.org
+                </a>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText('info@zakiarelief.org');
+                    toast({
+                      title: "Email Copied!",
+                      description: "Email address copied to clipboard",
+                    });
+                  }}
+                  className="text-primary hover:text-primary/80 transition-colors"
+                  title="Copy email address"
+                >
+                  <Copy className="h-3 w-3" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -172,9 +233,14 @@ const Contact = () => {
                 />
               </div>
               
-              <Button type="submit" size="lg" className="community-gradient text-white w-full shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 py-3">
-                <Send className="h-5 w-5 mr-2" />
-                Send Message
+              <Button 
+                type="submit" 
+                size="lg" 
+                disabled={isSubmitting}
+                className="community-gradient text-white w-full shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Send className={`h-5 w-5 mr-2 ${isSubmitting ? 'animate-pulse' : ''}`} />
+                {isSubmitting ? 'Sending...' : 'Send Message'}
               </Button>
             </form>
           </CardContent>

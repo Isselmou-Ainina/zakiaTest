@@ -124,14 +124,6 @@ const Footer = () => {
                   >
                     +222 43 72 72 40
                   </a>
-                  <a 
-                    href="https://wa.me/22243727240" 
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs md:text-sm text-green-400 hover:text-green-300 transition-colors cursor-pointer"
-                  >
-                    📱 WhatsApp available
-                  </a>
                 </div>
               </div>
               <div className="flex items-center space-x-3">

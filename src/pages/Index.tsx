@@ -61,7 +61,7 @@ const Index = () => {
         <div className="relative z-20 max-w-6xl mx-auto container-padding w-full">
           <div className="text-center">
             <Badge variant="secondary" className="mb-4 md:mb-6 px-6 md:px-8 py-3 md:py-4 text-sm md:text-base font-semibold gold-gradient text-white border-0 rounded-full shadow-xl backdrop-blur-sm">
-              ✨ Volunteer-led since 2018
+              Volunteer-led since 2018
             </Badge>
             <h1 className="mobile-text-3xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight">
               Building Stronger Communities in{' '}

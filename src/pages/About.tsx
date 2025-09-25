@@ -285,10 +285,10 @@ const About = () => {
                 We're always looking for passionate leaders to join our mission. If you're interested in board positions or leadership roles, we'd love to hear from you.
               </p>
               <Button asChild size="lg" variant="outline" className="border-white/60 border-2 text-white hover:bg-white hover:text-primary bg-white/10 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 px-6 py-3">
-                <a href="mailto:info@zakiarelief.org" className="flex items-center justify-center">
+                <NavLink to="/contact" className="flex items-center justify-center">
                   Contact Leadership
                   <ArrowRight className="h-5 w-5 ml-2" />
-                </a>
+                </NavLink>
               </Button>
             </div>
           </div>
