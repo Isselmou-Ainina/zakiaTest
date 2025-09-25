@@ -112,14 +112,24 @@ const Footer = () => {
               <div className="flex items-center space-x-3">
                 <Phone className="h-4 w-4 md:h-5 md:w-5 text-secondary opacity-80 flex-shrink-0" />
                 <div className="opacity-90">
-                  <p>+222 XX XX XX XX</p>
+                  <a 
+                    href="tel:+22243727240" 
+                    className="text-white hover:text-secondary transition-colors cursor-pointer"
+                  >
+                    +222 43 72 72 40
+                  </a>
                   <p className="text-xs md:text-sm opacity-75">WhatsApp available</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="h-4 w-4 md:h-5 md:w-5 text-secondary opacity-80 flex-shrink-0" />
                 <div className="opacity-90">
-                  <p>info@zakiarelief.org</p>
+                  <a 
+                    href="mailto:info@zakiarelief.org" 
+                    className="text-white hover:text-secondary transition-colors cursor-pointer"
+                  >
+                    info@zakiarelief.org
+                  </a>
                 </div>
               </div>
             </div>

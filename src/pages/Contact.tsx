@@ -88,14 +88,24 @@ const Contact = () => {
                 <Phone className="h-5 w-5 text-primary mr-2" />
                 <span className="font-medium text-foreground">Phone</span>
               </div>
-              <p className="text-sm text-muted-foreground">+222 XX XX XX XX</p>
+              <a 
+                href="tel:+22243727240" 
+                className="text-sm text-primary hover:text-primary/80 transition-colors cursor-pointer"
+              >
+                +222 43 72 72 40
+              </a>
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-center">
                 <Mail className="h-5 w-5 text-primary mr-2" />
                 <span className="font-medium text-foreground">Email</span>
               </div>
-              <p className="text-sm text-muted-foreground">info@zakiarelief.org</p>
+              <a 
+                href="mailto:info@zakiarelief.org" 
+                className="text-sm text-primary hover:text-primary/80 transition-colors cursor-pointer"
+              >
+                info@zakiarelief.org
+              </a>
             </div>
           </div>
         </div>

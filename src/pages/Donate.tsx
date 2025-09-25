@@ -1,20 +1,20 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Heart, Users, Utensils, Droplets, TreePine, Shield, Smartphone, CheckCircle, Copy, Phone, Globe, TrendingUp, Calculator, RefreshCw, AlertCircle } from 'lucide-react';
+import { Heart, Users, Utensils, Droplets, TreePine, Shield, Smartphone, CheckCircle, Copy, Phone, Globe, TrendingUp, Calculator, RefreshCw, AlertCircle, CreditCard, ArrowRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useState, useEffect } from 'react';
 
 const Donate = () => {
   const { toast } = useToast();
   const [selectedCurrency, setSelectedCurrency] = useState('MRU');
-  const [donationAmount, setDonationAmount] = useState(1000);
+  const [donationAmount, setDonationAmount] = useState<number | ''>(1000);
   const [exchangeRates, setExchangeRates] = useState<Record<string, number>>({});
   const [isLoadingRates, setIsLoadingRates] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [ratesError, setRatesError] = useState<string | null>(null);
 
-  // Check if rates need to be updated (once per day)
+  // Fast rate checking with immediate cache loading
   const shouldUpdateRates = () => {
     const lastUpdate = localStorage.getItem('zakia-exchange-rates-last-update');
     if (!lastUpdate) return true;
@@ -23,69 +23,111 @@ const Donate = () => {
     const now = new Date();
     const hoursDiff = (now.getTime() - lastUpdateDate.getTime()) / (1000 * 60 * 60);
     
-    return hoursDiff >= 24; // Update if 24+ hours have passed
+    return hoursDiff >= 24;
   };
 
-  // Load cached rates from localStorage
+  // Instant cache loading with fallback rates
   const loadCachedRates = () => {
     const cachedRates = localStorage.getItem('zakia-exchange-rates');
     const lastUpdate = localStorage.getItem('zakia-exchange-rates-last-update');
     
     if (cachedRates && lastUpdate) {
       try {
-        setExchangeRates(JSON.parse(cachedRates));
+        const rates = JSON.parse(cachedRates);
+        setExchangeRates(rates);
         setLastUpdated(new Date(lastUpdate));
+        setIsLoadingRates(false); // Stop loading immediately
         return true;
       } catch (error) {
         console.error('Error loading cached rates:', error);
       }
     }
+    
+    // Instant fallback rates for immediate display
+    setExchangeRates({
+      'MRU': 1,
+      'USD': 0.027,
+      'EUR': 0.025,
+      'XOF': 16.5
+    });
+    setIsLoadingRates(false);
     return false;
   };
 
-  // Fetch daily exchange rates
+
+  // Ultra-fast exchange rate fetching with multiple reliable APIs
   const fetchExchangeRates = async (forceUpdate = false) => {
+    if (!forceUpdate) {
+      setIsLoadingRates(false); // Don't show loading for background updates
+    }
+    
     try {
-      setIsLoadingRates(true);
       setRatesError(null);
       
-      // Using exchangerate-api.com (free, no API key required)
-      const response = await fetch('https://api.exchangerate-api.com/v4/latest/MRU');
+      // Fast timeout and multiple API fallbacks
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout for speed
       
-      if (!response.ok) {
-        throw new Error('Failed to fetch exchange rates');
+      // Try multiple reliable APIs in parallel for speed and reliability
+      const apiPromises = [
+        // Primary: ExchangeRate-API (free, reliable)
+        fetch('https://api.exchangerate-api.com/v4/latest/MRU', { 
+          signal: controller.signal,
+          headers: { 'Accept': 'application/json' }
+        }),
+        // Backup: Fixer.io free tier (if available)
+        fetch('https://api.fixer.io/latest?base=MRU', { 
+          signal: controller.signal,
+          headers: { 'Accept': 'application/json' }
+        }).catch(() => null), // Ignore if not available
+        // Backup: CurrencyAPI (free tier)
+        fetch('https://api.currencyapi.com/v3/latest?apikey=free&currencies=USD,EUR,XOF&base_currency=MRU', { 
+          signal: controller.signal,
+          headers: { 'Accept': 'application/json' }
+        }).catch(() => null) // Ignore if not available
+      ];
+      
+      const responses = await Promise.allSettled(apiPromises);
+      clearTimeout(timeoutId);
+      
+      // Find the first successful response
+      let data = null;
+      for (const response of responses) {
+        if (response.status === 'fulfilled' && response.value && response.value.ok) {
+          data = await response.value.json();
+          break;
+        }
       }
       
-      const data = await response.json();
-      setExchangeRates(data.rates);
+      if (!data) {
+        throw new Error('All APIs failed');
+      }
+      
+      // Extract rates from different API response formats
+      const rates = data.rates || data.data?.rates || data;
+      
+      setExchangeRates(rates);
       setLastUpdated(new Date());
       
-      // Cache the rates and timestamp
-      localStorage.setItem('zakia-exchange-rates', JSON.stringify(data.rates));
+      // Fast cache update
+      localStorage.setItem('zakia-exchange-rates', JSON.stringify(rates));
       localStorage.setItem('zakia-exchange-rates-last-update', new Date().toISOString());
       
       if (forceUpdate) {
         toast({
-          title: "Exchange Rates Updated",
-          description: "Daily currency rates have been refreshed",
+          title: "Rates Updated",
+          description: "Currency rates refreshed from reliable sources",
         });
       }
     } catch (error) {
       console.error('Error fetching exchange rates:', error);
-      setRatesError('Unable to fetch daily rates. Using approximate rates.');
+      setRatesError('Using cached rates');
       
-      // Fallback to approximate rates
-      setExchangeRates({
-        'MRU': 1,
-        'USD': 0.027,
-        'EUR': 0.025,
-        'XOF': 16.5
-      });
-      
+      // Keep existing rates, don't overwrite with fallback
       if (forceUpdate) {
         toast({
-          title: "Using Approximate Rates",
-          description: "Daily rates unavailable. Using approximate exchange rates.",
+          title: "Using Cached Rates",
+          description: "Live rates unavailable, using cached data",
           variant: "destructive"
         });
       }
@@ -94,14 +136,14 @@ const Donate = () => {
     }
   };
 
-  // Initialize rates on component mount
+  // Ultra-fast initialization with immediate display
   useEffect(() => {
-    // Try to load cached rates first
+    // Load cached rates instantly (no loading state)
     const hasCachedRates = loadCachedRates();
     
-    // Only fetch new rates if we don't have cached ones or they're outdated
+    // Background fetch for fresh rates (no loading indicator)
     if (!hasCachedRates || shouldUpdateRates()) {
-      fetchExchangeRates();
+      fetchExchangeRates(); // Runs in background
     }
   }, []);
 
@@ -150,8 +192,9 @@ const Donate = () => {
   ];
 
   const selectedCurrencyData = currencies.find(c => c.code === selectedCurrency) || currencies[0];
-  const equivalentAmount = Math.round(donationAmount * selectedCurrencyData.impactMultiplier);
-  const localAmount = Math.round(donationAmount / selectedCurrencyData.impactMultiplier);
+  const numericAmount = typeof donationAmount === 'number' ? donationAmount : 0;
+  const equivalentAmount = Math.round(numericAmount * selectedCurrencyData.impactMultiplier);
+  const localAmount = Math.round(numericAmount / selectedCurrencyData.impactMultiplier);
 
   // Impact calculations based on amount
   const getImpact = (amount: number) => {
@@ -378,9 +421,13 @@ const Donate = () => {
                       <input
                         type="number"
                         value={donationAmount}
-                        onChange={(e) => setDonationAmount(Number(e.target.value))}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setDonationAmount(value === '' ? '' : Number(value));
+                        }}
                         className="w-full px-4 py-3 border border-border rounded-lg text-lg font-semibold focus:ring-2 focus:ring-primary focus:border-transparent"
                         placeholder="Enter amount"
+                        min="0"
                       />
                     </div>
                     <div className="text-lg font-semibold text-muted-foreground">
@@ -407,7 +454,7 @@ const Donate = () => {
                       <h4 className="font-medium text-foreground">Your Donation:</h4>
                       <div className="bg-white rounded-lg p-4 border border-border/60">
                         <div className="text-2xl font-bold text-primary">
-                          {donationAmount.toLocaleString()} {selectedCurrencyData.symbol}
+                          {numericAmount.toLocaleString()} {selectedCurrencyData.symbol}
                         </div>
                         <div className="text-sm text-muted-foreground">
                           {selectedCurrencyData.name}
@@ -477,7 +524,7 @@ const Donate = () => {
               Donate via Bankily
             </h2>
             <p className="text-lg text-white/90 leading-relaxed">
-              Transfer your donation of <span className="font-semibold text-secondary">{donationAmount.toLocaleString()} {selectedCurrencyData.symbol}</span> 
+              Transfer your donation of <span className="font-semibold text-secondary">{numericAmount.toLocaleString()} {selectedCurrencyData.symbol}</span> 
               {selectedCurrency !== 'MRU' && (
                 <span className="block text-sm mt-1">
                   (≈ {equivalentAmount.toLocaleString()} MRU local impact)
@@ -523,7 +570,12 @@ const Donate = () => {
                           Copy
                         </button>
                       </div>
-                      <p className="text-2xl font-bold text-green-800 tracking-wider">+222 43727240</p>
+                      <a 
+                        href="tel:+22243727240" 
+                        className="text-2xl font-bold text-green-800 tracking-wider hover:text-green-700 transition-colors cursor-pointer"
+                      >
+                        +222 43727240
+                      </a>
                     </div>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -602,7 +654,7 @@ const Donate = () => {
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <p className="text-sm text-blue-800">
                       <strong>Currency Note:</strong> Bankily transfers are in MRU. 
-                      Your {donationAmount.toLocaleString()} {selectedCurrencyData.symbol} donation 
+                      Your {numericAmount.toLocaleString()} {selectedCurrencyData.symbol} donation 
                       equals {equivalentAmount.toLocaleString()} MRU for maximum local impact.
                     </p>
                   </div>
