@@ -33,7 +33,9 @@ const Footer = () => {
               <h4 className="font-medium mb-3 text-white text-sm md:text-base">Follow Us</h4>
               <div className="flex items-center space-x-4">
                 <a 
-                  href="#" 
+                  href="https://www.facebook.com/profile.php?id=100083276394454" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="group flex items-center space-x-2 hover:text-secondary transition-all duration-300 opacity-90 hover:opacity-100"
                   title="Follow us on Facebook"
                 >
@@ -41,7 +43,9 @@ const Footer = () => {
                   <span className="text-sm">Facebook</span>
                 </a>
                 <a 
-                  href="#" 
+                  href="https://instagram.com/zakia.relief" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="group flex items-center space-x-2 hover:text-secondary transition-all duration-300 opacity-90 hover:opacity-100"
                   title="Follow us on Instagram"
                 >
@@ -49,7 +53,9 @@ const Footer = () => {
                   <span className="text-sm">Instagram</span>
                 </a>
                 <a 
-                  href="#" 
+                  href="https://wa.me/22243727240" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="group flex items-center space-x-2 hover:text-secondary transition-all duration-300 opacity-90 hover:opacity-100"
                   title="Contact us on WhatsApp"
                 >
@@ -118,7 +124,14 @@ const Footer = () => {
                   >
                     +222 43 72 72 40
                   </a>
-                  <p className="text-xs md:text-sm opacity-75">WhatsApp available</p>
+                  <a 
+                    href="https://wa.me/22243727240" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs md:text-sm text-green-400 hover:text-green-300 transition-colors cursor-pointer"
+                  >
+                    📱 WhatsApp available
+                  </a>
                 </div>
               </div>
               <div className="flex items-center space-x-3">

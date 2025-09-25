@@ -375,9 +375,13 @@ const Donate = () => {
                         </div>
                       )}
                       <button
-                        onClick={() => fetchExchangeRates(true)}
+                        onClick={(e) => {
+                          fetchExchangeRates(true);
+                          // Remove focus after click to prevent outline from staying
+                          e.currentTarget.blur();
+                        }}
                         disabled={isLoadingRates}
-                        className="flex items-center px-3 py-1 text-sm bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors disabled:opacity-50"
+                        className="flex items-center px-3 py-1 text-sm bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2"
                       >
                         <RefreshCw className={`h-4 w-4 mr-1 ${isLoadingRates ? 'animate-spin' : ''}`} />
                         Update Rates
@@ -557,13 +561,15 @@ const Donate = () => {
                         </div>
                         <button
                           type="button"
-                          className="flex items-center px-3 py-1 text-xs bg-green-100 text-green-700 rounded-full hover:bg-green-200 transition-colors"
-                          onClick={() => {
+                          className="flex items-center px-3 py-1 text-xs bg-green-100 text-green-700 rounded-full hover:bg-green-200 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:ring-offset-1"
+                          onClick={(e) => {
                             navigator.clipboard.writeText('+222 43727240');
                             toast({
                               title: "Copied!",
                               description: "Phone number copied to clipboard",
                             });
+                            // Remove focus after click to prevent outline from staying
+                            e.currentTarget.blur();
                           }}
                         >
                           <Copy className="h-3 w-3 mr-1" />

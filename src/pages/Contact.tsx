@@ -88,12 +88,22 @@ const Contact = () => {
                 <Phone className="h-5 w-5 text-primary mr-2" />
                 <span className="font-medium text-foreground">Phone</span>
               </div>
-              <a 
-                href="tel:+22243727240" 
-                className="text-sm text-primary hover:text-primary/80 transition-colors cursor-pointer"
-              >
-                +222 43 72 72 40
-              </a>
+              <div className="space-y-1">
+                <a 
+                  href="tel:+22243727240" 
+                  className="text-sm text-primary hover:text-primary/80 transition-colors cursor-pointer block"
+                >
+                  +222 43 72 72 40
+                </a>
+                <a 
+                  href="https://wa.me/22243727240" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-green-600 hover:text-green-700 transition-colors cursor-pointer"
+                >
+                  📱 WhatsApp
+                </a>
+              </div>
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-center">
