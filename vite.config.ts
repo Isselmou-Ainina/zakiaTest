@@ -29,12 +29,6 @@ export default defineConfig(() => ({
     chunkSizeWarningLimit: 1000,
     // SEO and performance optimizations
     minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-      },
-    },
     // Generate source maps for better debugging
     sourcemap: false,
     // Optimize asset names for caching
