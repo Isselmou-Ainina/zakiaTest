@@ -10,7 +10,7 @@ const Footer = () => {
           <div className="col-span-1 lg:col-span-2">
             <div className="flex items-center space-x-3 mb-6">
               <img 
-                src="/zakia_transparent_logo.png" 
+                src="/zakia_transparent_logo.webp" 
                 alt="Zakia Relief - Building Stronger Communities" 
                 className="h-16 md:h-20 w-auto"
               />

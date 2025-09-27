@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+  
+  <!-- Homepage -->
+  <url>
+    <loc>https://zakiarelief.org/</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://zakiarelief.org/team_pic.webp</image:loc>
+      <image:title>Zakia Relief volunteer team working in the community</image:title>
+      <image:caption>Zakia Relief volunteer team working together to help families in Mauritania</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://zakiarelief.org/zakia_transparent_logo.webp</image:loc>
+      <image:title>Zakia Relief Logo</image:title>
+      <image:caption>Official Zakia Relief Foundation logo</image:caption>
+    </image:image>
+  </url>
+
+  <!-- About Page -->
+  <url>
+    <loc>https://zakiarelief.org/about</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://zakiarelief.org/ely.jpeg</image:loc>
+      <image:title>Ely Boidaha - Co-Founder & Executive Director</image:title>
+      <image:caption>Ely Boidaha, Co-Founder and Executive Director of Zakia Relief</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://zakiarelief.org/isselmou.jpeg</image:loc>
+      <image:title>Isselmou Ainina - Co-Founder & Operations Director</image:title>
+      <image:caption>Isselmou Ainina, Co-Founder and Operations Director of Zakia Relief</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Our Work Page -->
+  <url>
+    <loc>https://zakiarelief.org/our-work</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://zakiarelief.org/beach_cleanup_1.jpg</image:loc>
+      <image:title>Community Beach Cleanup in Action</image:title>
+      <image:caption>Zakia Relief volunteers cleaning the community beach in Nouakchott</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://zakiarelief.org/food_donation_1.jpg</image:loc>
+      <image:title>Food Distribution Program</image:title>
+      <image:caption>Community food distribution program providing meals to families in need</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://zakiarelief.org/water_donation_1.jpg</image:loc>
+      <image:title>Clean Water Distribution</image:title>
+      <image:caption>Providing clean water access to underserved communities in Mauritania</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Donate Page -->
+  <url>
+    <loc>https://zakiarelief.org/donate</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://zakiarelief.org/bankily_qr_code.jpeg</image:loc>
+      <image:title>Bankily QR Code for Donations</image:title>
+      <image:caption>QR code for easy mobile donations via Bankily</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Get Involved Page -->
+  <url>
+    <loc>https://zakiarelief.org/get-involved</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Contact Page -->
+  <url>
+    <loc>https://zakiarelief.org/contact</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Team Photos -->
+  <url>
+    <loc>https://zakiarelief.org/team_pic_2.webp</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+    <image:image>
+      <image:loc>https://zakiarelief.org/team_pic_2.webp</image:loc>
+      <image:title>Zakia Relief Team Working in Community</image:title>
+      <image:caption>Zakia Relief team members working together in the community</image:caption>
+    </image:image>
+  </url>
+
+</urlset>

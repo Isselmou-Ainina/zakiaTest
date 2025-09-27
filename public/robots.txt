@@ -1,14 +1,51 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://zakiarelief.org/sitemap.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1
+
+# Allow all search engines to index all content
+Disallow:
+
+# Block access to admin areas (if any)
+Disallow: /admin/
+Disallow: /private/
+Disallow: /temp/
+
+# Allow access to CSS and JS files
+Allow: /src/
+Allow: /assets/
+Allow: /*.css
+Allow: /*.js
+Allow: /*.webp
+Allow: /*.jpg
+Allow: /*.jpeg
+Allow: /*.png
+
+# Specific instructions for major search engines
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 1
 
-User-agent: Twitterbot
+User-agent: Slurp
 Allow: /
+Crawl-delay: 1
 
-User-agent: facebookexternalhit
+User-agent: DuckDuckBot
 Allow: /
+Crawl-delay: 1
 
-User-agent: *
+User-agent: Baiduspider
 Allow: /
+Crawl-delay: 2
+
+User-agent: YandexBot
+Allow: /
+Crawl-delay: 2

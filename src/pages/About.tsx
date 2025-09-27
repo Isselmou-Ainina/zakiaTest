@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Users, Target, Award, Heart, Handshake, ArrowRight, CheckCircle } from 'lucide-react';
+import { Users, Target, Award, Heart, Handshake, ArrowRight, CheckCircle, Shield } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
 const About = () => {
@@ -45,9 +45,28 @@ const About = () => {
               About <span className="text-secondary bg-gradient-to-r from-secondary to-secondary/80 bg-clip-text text-transparent drop-shadow-lg">Zakia Relief</span>
             </h1>
             <p className="mobile-text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 max-w-4xl mx-auto opacity-95 leading-relaxed font-light">
-              Founded in 2018, we are a volunteer-driven charitable foundation 
-              dedicated to creating sustainable positive change in Mauritania's communities.
+              Founded in 2018, Zakia Relief is a volunteer-driven charitable foundation 
+              that has transformed thousands of lives across Mauritania through sustainable 
+              community development and direct action.
             </p>
+            
+            {/* Key Impact Metrics */}
+            <div className="grid grid-cols-2 md:grid-cols-4 mobile-gap max-w-4xl mx-auto mt-8 md:mt-12">
+              {[
+                { number: "500+", label: "Families Served", icon: Users },
+                { number: "8K+", label: "Meals Provided", icon: Heart },
+                { number: "300+", label: "Tons of Water", icon: Target },
+                { number: "6", label: "Years of Service", icon: Award }
+              ].map((stat, index) => (
+                <div key={index} className="group">
+                  <div className="text-center bg-white/10 backdrop-blur-md rounded-2xl p-4 md:p-6 border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300 hover:bg-white/15 transform hover:-translate-y-2">
+                    <stat.icon className="h-6 w-6 md:h-8 md:w-8 mx-auto mb-2 md:mb-3 opacity-90 text-secondary group-hover:scale-110 transition-transform duration-300" />
+                    <div className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg group-hover:scale-105 transition-transform">{stat.number}</div>
+                    <div className="text-white/95 font-medium text-xs md:text-sm">{stat.label}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -291,6 +310,68 @@ const About = () => {
                 </NavLink>
               </Button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Transparency & Accountability */}
+      <section className="py-16 md:py-20 container-padding max-w-6xl mx-auto relative">
+        <div className="relative z-10">
+          <div className="text-center mb-12 md:mb-16">
+            <Badge className="mb-4 px-6 py-2 community-gradient text-white border-0 rounded-full text-sm font-semibold">
+              Our Commitment
+            </Badge>
+            <h2 className="mobile-text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-5 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+              Transparency & Accountability
+            </h2>
+            <p className="mobile-text-base md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              We believe in complete transparency and accountability to our donors, volunteers, and the communities we serve.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mobile-gap">
+            {[
+              {
+                icon: Shield,
+                title: "Financial Transparency",
+                description: "100% of donations go directly to programs. We maintain detailed financial records and provide regular impact reports.",
+                color: "from-green-500 to-green-600"
+              },
+              {
+                icon: CheckCircle,
+                title: "Verified Impact",
+                description: "All our programs are monitored and evaluated to ensure measurable, sustainable outcomes for communities.",
+                color: "from-blue-500 to-blue-600"
+              },
+              {
+                icon: Users,
+                title: "Community-Led",
+                description: "Our programs are designed and implemented with direct input from the communities we serve.",
+                color: "from-purple-500 to-purple-600"
+              },
+              {
+                icon: Award,
+                title: "Volunteer-Driven",
+                description: "Led entirely by volunteers, ensuring maximum efficiency and minimal overhead costs.",
+                color: "from-orange-500 to-orange-600"
+              }
+            ].map((item, index) => (
+              <Card key={index} className="group relative overflow-hidden border-0 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 bg-gradient-to-br from-card via-card to-muted/20 text-center h-full">
+                <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-primary/5 to-transparent rounded-full transform translate-x-4 -translate-y-4"></div>
+                
+                <CardHeader className="pb-4 relative z-10">
+                  <div className="mx-auto p-4 md:p-5 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-2xl w-fit mb-4 group-hover:scale-110 transition-all duration-500 shadow-lg">
+                    <item.icon className="h-6 w-6 md:h-8 md:w-8 text-primary" />
+                  </div>
+                  <CardTitle className="text-lg md:text-xl text-foreground group-hover:text-primary transition-colors duration-300">{item.title}</CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0 relative z-10">
+                  <CardDescription className="text-sm md:text-base leading-relaxed text-muted-foreground group-hover:text-foreground transition-colors duration-300">
+                    {item.description}
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>

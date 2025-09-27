@@ -311,7 +311,7 @@
 
   /* Hero background image class */
   .hero-bg {
-    background-image: url('/zakia_transparent_logo.png');
+    background-image: url('/zakia_transparent_logo.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

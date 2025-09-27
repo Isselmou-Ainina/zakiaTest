@@ -3,6 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Utensils, Droplets, TreePine, Users, Heart, Target, ArrowRight, CheckCircle, Building2, UserPlus, TrendingUp } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
+import beachCleanup1 from '/beach_cleanup_1.jpg';
+import foodDonation1 from '/food_donation_1.jpg';
+import waterDonation1 from '/water_donation_1.jpg';
 
 const OurWork = () => {
   const milestones = [
@@ -201,18 +204,66 @@ const OurWork = () => {
                       </div>
                     </div>
                     
-                    <div className={`bg-gradient-to-br ${program.color} p-6 md:p-8 lg:p-10 flex items-center justify-center relative overflow-hidden`}>
-                      {/* Background decoration for image area */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
-                      <div className="text-center relative z-10">
-                        <div className="relative">
-                          <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent rounded-full blur-3xl"></div>
-                          <program.icon className="h-24 w-24 md:h-32 md:w-32 text-primary mx-auto mb-6 opacity-30 group-hover:opacity-40 group-hover:scale-110 transition-all duration-500 relative z-10" />
-                        </div>
-                        <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
-                          Program imagery and community photos showcasing our impact in action.
-                        </p>
-                      </div>
+                    <div className={`bg-gradient-to-br ${program.color} relative overflow-hidden h-96 md:h-[32rem]`}>
+                      {program.title === "Feeding the Community" ? (
+                        <>
+                          <img 
+                            src={foodDonation1} 
+                            alt="Food donation and community feeding" 
+                            className="w-full h-full object-cover object-center group-hover:scale-105 transition-all duration-500"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                          <div className="absolute bottom-0 left-0 right-0 text-center p-4">
+                            <p className="text-white text-sm md:text-base leading-relaxed font-medium drop-shadow-lg">
+                              Community food distribution in action
+                            </p>
+                          </div>
+                        </>
+                      ) : program.title === "Providing Clean Water" ? (
+                        <>
+                          <img 
+                            src={waterDonation1} 
+                            alt="Water donation and clean water access" 
+                            className="w-full h-full object-cover object-bottom group-hover:scale-105 transition-all duration-500"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                          <div className="absolute bottom-0 left-0 right-0 text-center p-4">
+                            <p className="text-white text-sm md:text-base leading-relaxed font-medium drop-shadow-lg">
+                              Clean water distribution in action
+                            </p>
+                          </div>
+                        </>
+                      ) : program.title === "Cleaning the Community" ? (
+                        <>
+                          <img 
+                            src={beachCleanup1} 
+                            alt="Beach cleanup community work" 
+                            className="w-full h-full object-cover object-center group-hover:scale-105 transition-all duration-500"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                          <div className="absolute bottom-0 left-0 right-0 text-center p-4">
+                            <p className="text-white text-sm md:text-base leading-relaxed font-medium drop-shadow-lg">
+                              Community beach cleanup in action
+                            </p>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          {/* Background decoration for image area */}
+                          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
+                          <div className="p-6 md:p-8 lg:p-10 flex items-center justify-center h-full">
+                            <div className="text-center relative z-10">
+                              <div className="relative">
+                                <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent rounded-full blur-3xl"></div>
+                                <program.icon className="h-24 w-24 md:h-32 md:w-32 text-primary mx-auto mb-6 opacity-30 group-hover:opacity-40 group-hover:scale-110 transition-all duration-500 relative z-10" />
+                              </div>
+                              <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
+                                Program imagery and community photos showcasing our impact in action.
+                              </p>
+                            </div>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
                 </CardContent>

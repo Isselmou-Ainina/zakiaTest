@@ -38,7 +38,7 @@ const Navigation = () => {
             onClick={handleLogoClick}
           >
             <img 
-              src="/zakia_transparent_logo.png" 
+              src="/zakia_transparent_logo.webp" 
               alt="Zakia Relief - Building Stronger Communities" 
               className="h-12 md:h-16 w-auto"
             />

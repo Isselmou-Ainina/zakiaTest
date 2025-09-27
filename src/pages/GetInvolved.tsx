@@ -589,12 +589,12 @@ const GetInvolved = () => {
                           ))}
                         </select>
                       </div>
-                      <Input
-                        id="phone"
+                    <Input
+                      id="phone"
                         type="tel"
                         placeholder="43727240"
                         className={`flex-1 rounded-l-none border-0 focus:ring-0 focus:outline-none bg-white ${errors.phone ? 'border-red-500 focus:border-red-500' : ''}`}
-                        value={formData.phone}
+                      value={formData.phone}
                         onChange={(e) => {
                           let value = e.target.value;
                           // Only allow digits

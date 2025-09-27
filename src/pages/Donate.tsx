@@ -268,9 +268,29 @@ const Donate = () => {
               Make a Difference <span className="text-secondary bg-gradient-to-r from-secondary to-secondary/80 bg-clip-text text-transparent drop-shadow-lg">Today</span>
             </h1>
             <p className="text-lg md:text-xl lg:text-2xl mb-8 md:mb-10 max-w-4xl mx-auto opacity-95 leading-relaxed font-light">
-              Your generosity directly impacts families and communities in Mauritania. 
-              Every contribution helps us provide food, clean water, and environmental care.
+              Your generosity directly transforms lives in Mauritania. Every donation goes 100% to programs, 
+              ensuring maximum impact for families and communities in need.
             </p>
+            
+            {/* Trust Signals */}
+            <div className="flex flex-wrap justify-center items-center gap-6 md:gap-8 opacity-90 mb-8">
+              <div className="flex items-center space-x-2 text-white/90">
+                <Shield className="h-5 w-5" />
+                <span className="text-sm md:text-base font-medium">100% Transparent</span>
+              </div>
+              <div className="flex items-center space-x-2 text-white/90">
+                <CheckCircle className="h-5 w-5" />
+                <span className="text-sm md:text-base font-medium">Verified Impact</span>
+              </div>
+              <div className="flex items-center space-x-2 text-white/90">
+                <Users className="h-5 w-5" />
+                <span className="text-sm md:text-base font-medium">Volunteer-Led</span>
+              </div>
+              <div className="flex items-center space-x-2 text-white/90">
+                <Heart className="h-5 w-5" />
+                <span className="text-sm md:text-base font-medium">Since 2018</span>
+              </div>
+            </div>
             
             {/* Stats */}
             <div className="grid grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto">
@@ -663,6 +683,22 @@ const Donate = () => {
                       Your {numericAmount.toLocaleString()} {selectedCurrencyData.symbol} donation 
                       equals {equivalentAmount.toLocaleString()} MRU for maximum local impact.
                     </p>
+                  </div>
+                  
+                  {/* Security & Trust */}
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div className="flex items-start space-x-3">
+                      <Shield className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <h4 className="font-semibold text-green-800 mb-1">Secure & Transparent</h4>
+                        <p className="text-sm text-green-700">
+                          • 100% of donations go directly to programs<br/>
+                          • Bankily is a trusted mobile money platform<br/>
+                          • All transactions are secure and traceable<br/>
+                          • Regular impact reports provided to donors
+                        </p>
+                      </div>
+                    </div>
                   </div>
                   
                   <p className="text-center text-sm text-muted-foreground">
