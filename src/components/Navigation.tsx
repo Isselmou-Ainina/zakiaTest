@@ -2,17 +2,20 @@ import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Menu, X, Heart } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
+import LanguageSelector from './LanguageSelector';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { t, language } = useLanguage();
 
   const navItems = [
-    { path: '/', label: 'Home' },
-    { path: '/about', label: 'About Us' },
-    { path: '/our-work', label: 'Our Work' },
-    { path: '/get-involved', label: 'Get Involved' },
-    { path: '/contact', label: 'Contact' }
+    { path: '/about', label: t('nav.about') },
+    { path: '/our-work', label: t('nav.ourWork') },
+    { path: '/impact', label: t('nav.impact') },
+    { path: '/get-involved', label: t('nav.getInvolved') },
+    { path: '/contact', label: t('nav.contact') }
   ];
 
   const closeMenu = () => setIsOpen(false);
@@ -29,7 +32,7 @@ const Navigation = () => {
 
   return (
     <nav className="bg-card border-b border-border sticky top-0 z-50 backdrop-blur-sm bg-card/95" role="navigation" aria-label="Main navigation">
-      <div className="max-w-6xl mx-auto container-padding">
+      <div className="max-w-6xl mx-auto container-padding" dir={language === 'ar' ? 'rtl' : 'ltr'}>
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <NavLink 
@@ -40,22 +43,22 @@ const Navigation = () => {
             <img 
               src="/zakia_transparent_logo.webp" 
               alt="Zakia Relief - Building Stronger Communities" 
-              className="h-12 md:h-16 w-auto"
+              className="h-10 md:h-14 w-auto"
             />
-            <div className="hidden sm:block">
-              <h1 className="text-lg md:text-xl font-semibold text-foreground">Zakia Relief</h1>
-              <p className="text-xs text-muted-foreground">Building Communities</p>
+            <div className="hidden md:block">
+              <h1 className="text-base md:text-lg font-semibold text-foreground">Zakia Relief</h1>
+              <p className="text-xs text-muted-foreground">{t('nav.tagline')}</p>
             </div>
           </NavLink>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-4">
             {navItems.map((item) => (
               <NavLink
                 key={item.path}
                 to={item.path}
                 className={({ isActive }) =>
-                  `transition-gentle hover:text-primary text-base font-medium touch-target flex items-center justify-center px-3 py-2 rounded-md ${
+                  `transition-gentle hover:text-primary text-sm font-medium touch-target flex items-center justify-center px-3 py-2 rounded-md ${
                     isActive ? 'text-primary font-semibold' : 'text-foreground'
                   }`
                 }
@@ -63,12 +66,17 @@ const Navigation = () => {
                 {item.label}
               </NavLink>
             ))}
-            <Button asChild className="community-gradient text-white hover:opacity-90 touch-target ml-4">
+            <div className="ml-2">
+              <Button asChild className="community-gradient text-white hover:opacity-90 touch-target">
               <NavLink to="/donate" className="flex items-center">
                 <Heart className="h-4 w-4 mr-2" />
-                Donate
+                {t('nav.donate')}
               </NavLink>
             </Button>
+            </div>
+            <div className="ml-2">
+              <LanguageSelector />
+            </div>
           </div>
 
           {/* Mobile menu button */}
@@ -111,13 +119,16 @@ const Navigation = () => {
                 {item.label}
               </NavLink>
             ))}
-            <div className="pt-4">
+            <div className="pt-4 space-y-3">
               <Button asChild className="community-gradient text-white w-full touch-target">
                 <NavLink to="/donate" onClick={closeMenu} className="flex items-center justify-center">
                   <Heart className="h-4 w-4 mr-2" />
-                  Donate Now
+                  {t('nav.donate')}
                 </NavLink>
               </Button>
+              <div className="px-4 flex justify-center">
+                <LanguageSelector />
+              </div>
             </div>
           </div>
         </div>

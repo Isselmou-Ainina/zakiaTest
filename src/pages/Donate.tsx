@@ -4,8 +4,10 @@ import { Badge } from '@/components/ui/badge';
 import { Heart, Users, Utensils, Droplets, TreePine, Shield, Smartphone, CheckCircle, Copy, Phone, Globe, TrendingUp, Calculator, RefreshCw, AlertCircle, CreditCard, ArrowRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useState, useEffect } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Donate = () => {
+  const { t, language } = useLanguage();
   const { toast } = useToast();
   const [selectedCurrency, setSelectedCurrency] = useState('MRU');
   const [donationAmount, setDonationAmount] = useState<number | ''>(1000);
@@ -13,42 +15,47 @@ const Donate = () => {
   const [isLoadingRates, setIsLoadingRates] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [ratesError, setRatesError] = useState<string | null>(null);
+  const [donationType, setDonationType] = useState('monthly'); // Default to monthly
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('bankily');
 
   // Fast rate checking with immediate cache loading
   const shouldUpdateRates = () => {
-    const lastUpdate = localStorage.getItem('zakia-exchange-rates-last-update');
-    if (!lastUpdate) return true;
-    
-    const lastUpdateDate = new Date(lastUpdate);
-    const now = new Date();
-    const hoursDiff = (now.getTime() - lastUpdateDate.getTime()) / (1000 * 60 * 60);
-    
-    return hoursDiff >= 24;
+    try {
+      const lastUpdate = localStorage.getItem('zakia-exchange-rates-last-update');
+      if (!lastUpdate) return true;
+      
+      const lastUpdateDate = new Date(lastUpdate);
+      const now = new Date();
+      const hoursDiff = (now.getTime() - lastUpdateDate.getTime()) / (1000 * 60 * 60);
+      
+      return hoursDiff >= 24;
+    } catch (error) {
+      return true;
+    }
   };
 
   // Instant cache loading with fallback rates
   const loadCachedRates = () => {
-    const cachedRates = localStorage.getItem('zakia-exchange-rates');
-    const lastUpdate = localStorage.getItem('zakia-exchange-rates-last-update');
-    
-    if (cachedRates && lastUpdate) {
-      try {
+    try {
+      const cachedRates = localStorage.getItem('zakia-exchange-rates');
+      const lastUpdate = localStorage.getItem('zakia-exchange-rates-last-update');
+      
+      if (cachedRates && lastUpdate) {
         const rates = JSON.parse(cachedRates);
         setExchangeRates(rates);
         setLastUpdated(new Date(lastUpdate));
-        setIsLoadingRates(false); // Stop loading immediately
+        setIsLoadingRates(false);
         return true;
-      } catch (error) {
-        console.error('Error loading cached rates:', error);
       }
+    } catch (error) {
+      console.error('Error loading cached rates:', error);
     }
     
     // Instant fallback rates for immediate display
     setExchangeRates({
       'MRU': 1,
       'USD': 0.027,
-      'EUR': 0.025,
-      'XOF': 16.5
+      'EUR': 0.025
     });
     setIsLoadingRates(false);
     return false;
@@ -81,7 +88,7 @@ const Donate = () => {
           headers: { 'Accept': 'application/json' }
         }).catch(() => null), // Ignore if not available
         // Backup: CurrencyAPI (free tier)
-        fetch('https://api.currencyapi.com/v3/latest?apikey=free&currencies=USD,EUR,XOF&base_currency=MRU', { 
+        fetch('https://api.currencyapi.com/v3/latest?apikey=free&currencies=USD,EUR&base_currency=MRU', { 
           signal: controller.signal,
           headers: { 'Accept': 'application/json' }
         }).catch(() => null) // Ignore if not available
@@ -110,9 +117,13 @@ const Donate = () => {
       setLastUpdated(new Date());
       
       // Fast cache update
-      localStorage.setItem('zakia-exchange-rates', JSON.stringify(rates));
-      localStorage.setItem('zakia-exchange-rates-last-update', new Date().toISOString());
-      
+      try {
+        localStorage.setItem('zakia-exchange-rates', JSON.stringify(rates));
+        localStorage.setItem('zakia-exchange-rates-last-update', new Date().toISOString());
+      } catch (error) {
+        console.error('Error saving rates to cache:', error);
+      }
+
       if (forceUpdate) {
         toast({
           title: "Rates Updated",
@@ -128,7 +139,7 @@ const Donate = () => {
         toast({
           title: "Using Cached Rates",
           description: "Live rates unavailable, using cached data",
-          variant: "destructive"
+          variant: "destructive" as const
         });
       }
     } finally {
@@ -151,12 +162,12 @@ const Donate = () => {
   const currencies = [
     {
       code: 'MRU',
-      name: 'Mauritanian Ouguiya',
+      name: t('donate.impactPreview.currency'),
       symbol: 'MRU',
       flag: '🇲🇷',
       exchangeRate: 1,
       impactMultiplier: 1,
-      description: 'Local currency - maximum impact',
+      description: t('donate.amount.local'),
       color: 'from-green-500 to-green-600'
     },
     {
@@ -178,16 +189,6 @@ const Donate = () => {
       impactMultiplier: exchangeRates.EUR ? 1 / exchangeRates.EUR : 40,
       description: 'High value impact',
       color: 'from-purple-500 to-purple-600'
-    },
-    {
-      code: 'XOF',
-      name: 'West African CFA Franc',
-      symbol: 'CFA',
-      flag: '🇸🇳',
-      exchangeRate: exchangeRates.XOF || 16.5,
-      impactMultiplier: exchangeRates.XOF ? 1 / exchangeRates.XOF : 0.06,
-      description: 'Regional currency',
-      color: 'from-orange-500 to-orange-600'
     }
   ];
 
@@ -211,42 +212,42 @@ const Donate = () => {
   const impactLevels = [
     {
       amount: '1000',
-      title: 'Feed a Family',
-      description: 'Provides nutritious meals for a family of 4 for one week',
+      title: t('donate.levels.1000.title'),
+      description: t('donate.levels.1000.meals'),
       icon: Utensils,
-      impact: '28 meals',
+      impact: '1,000 MRU',
       color: 'from-primary/20 to-primary/5'
     },
     {
       amount: '2000',
-      title: 'Clean Water Delivery',
-      description: 'Contributes to water delivery and distribution systems',
+      title: t('donate.levels.2000.title'),
+      description: '',
       icon: Droplets,
-      impact: '500L clean water',
+      impact: '2,000 MRU',
       color: 'from-secondary/20 to-secondary/5'
     },
     {
       amount: '4000',
-      title: 'Community Clean-up',
-      description: 'Funds environmental education and clean-up initiatives',
+      title: t('donate.levels.4000.title'),
+      description: t('donate.levels.4000.details'),
       icon: TreePine,
-      impact: '500kg waste removed',
+      impact: '4,000 MRU',
       color: 'from-accent/20 to-accent/5'
     },
     {
       amount: '10000',
-      title: 'Monthly Program Support',
-      description: 'Supports all three core programs for a month',
+      title: t('donate.levels.10000.title'),
+      description: '',
       icon: Heart,
-      impact: 'Full program month',
+      impact: '10,000 MRU',
       color: 'from-primary/20 to-primary/5'
     }
   ];
 
   const stats = [
-    { icon: Users, value: "500+", label: "Families Helped" },
-    { icon: Shield, value: "100%", label: "Transparent" },
-    { icon: Heart, value: "Direct", label: "Impact" }
+    { icon: Users, value: "500+", label: t('donate.trust.families') },
+    { icon: Shield, value: "100%", label: t('donate.trust.100transparent') },
+    { icon: Heart, value: t('donate.trust.direct'), label: t('donate.trust.verified') }
   ];
 
 
@@ -262,33 +263,34 @@ const Donate = () => {
         <div className="max-w-6xl mx-auto container-padding relative z-10">
           <div className="text-center">
             <Badge className="mb-4 md:mb-6 px-6 py-2 gold-gradient text-white border-0 rounded-full text-sm font-semibold shadow-xl">
-              Support Our Mission
+              {t('donate.hero.title')}
             </Badge>
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight">
-              Make a Difference <span className="text-secondary bg-gradient-to-r from-secondary to-secondary/80 bg-clip-text text-transparent drop-shadow-lg">Today</span>
+              {t('donate.hero.subtitle').split(' ').slice(0, 2).join(' ')} <span className="text-secondary bg-gradient-to-r from-secondary to-secondary/80 bg-clip-text text-transparent drop-shadow-lg">{t('donate.hero.subtitle').split(' ').slice(2).join(' ')}</span>
             </h1>
             <p className="text-lg md:text-xl lg:text-2xl mb-8 md:mb-10 max-w-4xl mx-auto opacity-95 leading-relaxed font-light">
-              Your generosity directly transforms lives in Mauritania. Every donation goes 100% to programs, 
-              ensuring maximum impact for families and communities in need.
+              {t('donate.hero.description')}
+              <br />
+              {t('donate.hero.details')}
             </p>
             
             {/* Trust Signals */}
             <div className="flex flex-wrap justify-center items-center gap-6 md:gap-8 opacity-90 mb-8">
               <div className="flex items-center space-x-2 text-white/90">
                 <Shield className="h-5 w-5" />
-                <span className="text-sm md:text-base font-medium">100% Transparent</span>
+                <span className="text-sm md:text-base font-medium">{t('donate.trust.100transparent')}</span>
               </div>
               <div className="flex items-center space-x-2 text-white/90">
                 <CheckCircle className="h-5 w-5" />
-                <span className="text-sm md:text-base font-medium">Verified Impact</span>
+                <span className="text-sm md:text-base font-medium">{t('donate.trust.verified')}</span>
               </div>
               <div className="flex items-center space-x-2 text-white/90">
                 <Users className="h-5 w-5" />
-                <span className="text-sm md:text-base font-medium">Volunteer-Led</span>
+                <span className="text-sm md:text-base font-medium">{t('donate.trust.volunteer')}</span>
               </div>
               <div className="flex items-center space-x-2 text-white/90">
                 <Heart className="h-5 w-5" />
-                <span className="text-sm md:text-base font-medium">Since 2018</span>
+                <span className="text-sm md:text-base font-medium">{t('donate.trust.since2018')}</span>
               </div>
             </div>
             
@@ -316,13 +318,13 @@ const Donate = () => {
         <div className="relative z-10">
           <div className="text-center mb-10 md:mb-14">
             <Badge className="mb-4 px-6 py-2 community-gradient text-white border-0 rounded-full text-sm font-semibold">
-              Your Impact
+              {t('donate.impact.title')}
             </Badge>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-5 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-              Your Impact at Every Level
+              {t('donate.impact.subtitle')}
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Choose a donation level that matches your ability to give and see the direct impact of your generosity.
+              {t('donate.impact.description')}
             </p>
           </div>
           
@@ -366,13 +368,13 @@ const Donate = () => {
           <div className="text-center mb-10 md:mb-14">
             <Badge className="mb-4 px-6 py-2 community-gradient text-white border-0 rounded-full text-sm font-semibold">
               <Globe className="h-4 w-4 mr-2" />
-              Daily Exchange Rates
+              {t('donate.currency.title')}
             </Badge>
             <h2 className="mobile-text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-5 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-              Choose Your Currency, See Your Impact
+              {t('donate.currency.subtitle')}
             </h2>
             <p className="mobile-text-base md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Donate in your preferred currency using daily updated exchange rates and see exactly how your contribution translates to local impact in Mauritania.
+              {t('donate.currency.description')}
             </p>
           </div>
 
@@ -385,7 +387,7 @@ const Donate = () => {
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold flex items-center">
                       <Globe className="h-5 w-5 mr-2 text-primary" />
-                      Select Your Currency
+{t('donate.currency.select')}
                     </h3>
                     <div className="flex items-center space-x-2">
                       {ratesError && (
@@ -404,7 +406,7 @@ const Donate = () => {
                         className="flex items-center px-3 py-1 text-sm bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2"
                       >
                         <RefreshCw className={`h-4 w-4 mr-1 ${isLoadingRates ? 'animate-spin' : ''}`} />
-                        Update Rates
+{t('donate.currency.update')}
                       </button>
                     </div>
                   </div>
@@ -434,11 +436,52 @@ const Donate = () => {
                   </div>
                 </div>
 
+                {/* Donation Type Selection */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-4 flex items-center">
+                    <Heart className="h-5 w-5 mr-2 text-primary" />
+                    {t('donate.frequency.title')}
+                  </h3>
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <button
+                      onClick={() => setDonationType('monthly')}
+                      className={`p-4 rounded-xl border-2 transition-all duration-300 transform hover:scale-105 ${
+                        donationType === 'monthly'
+                          ? 'border-primary bg-gradient-to-br from-primary/20 to-primary/10 shadow-lg'
+                          : 'border-border bg-card hover:border-primary/50 hover:shadow-md'
+                      }`}
+                    >
+                      <div className="text-center">
+                        <div className="text-2xl mb-2">📅</div>
+                        <div className="font-semibold">{t('donate.frequency.monthly')}</div>
+                        <div className="text-xs opacity-75 mt-1">{t('donate.frequency.monthlyRecommended')}</div>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => setDonationType('once')}
+                      className={`p-4 rounded-xl border-2 transition-all duration-300 transform hover:scale-105 ${
+                        donationType === 'once'
+                          ? 'border-primary bg-gradient-to-br from-primary/20 to-primary/10 shadow-lg'
+                          : 'border-border bg-card hover:border-primary/50 hover:shadow-md'
+                      }`}
+                    >
+                      <div className="text-center">
+                        <div className="text-2xl mb-2">💝</div>
+                        <div className="font-semibold">{t('donate.frequency.onetime')}</div>
+                        <div className="text-xs opacity-75 mt-1">{t('donate.frequency.onetimeDescription')}</div>
+                      </div>
+                    </button>
+                  </div>
+                  <div className="text-sm text-muted-foreground bg-muted/50 rounded-lg p-3">
+                    <strong>{t('donate.frequency.monthly')} {t('donate.giving')}:</strong> {t('donate.frequency.monthlyNote')}
+                  </div>
+                </div>
+
                 {/* Amount Input */}
                 <div>
                   <h3 className="text-lg font-semibold mb-4 flex items-center">
                     <Calculator className="h-5 w-5 mr-2 text-primary" />
-                    Enter Donation Amount
+                    {t('donate.amount.enter')}
                   </h3>
                   <div className="flex items-center space-x-4">
                     <div className="flex-1">
@@ -468,33 +511,48 @@ const Donate = () => {
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold flex items-center">
                       <TrendingUp className="h-5 w-5 mr-2 text-primary" />
-                      Your Impact in Mauritania
+                      {t('donate.impactPreview.title')}
                     </h3>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {/* Your Donation */}
                     <div className="space-y-3">
-                      <h4 className="font-medium text-foreground">Your Donation:</h4>
+                      <h4 className="font-medium text-foreground">{t('donate.impactPreview.donation')}</h4>
                       <div className="bg-white rounded-lg p-4 border border-border/60">
-                        <div className="text-2xl font-bold text-primary">
+                        <div className="text-xl font-bold text-primary">
                           {numericAmount.toLocaleString()} {selectedCurrencyData.symbol}
                         </div>
-                        <div className="text-sm text-muted-foreground">
+                        <div className="text-xs text-muted-foreground">
                           {selectedCurrencyData.name}
                         </div>
                       </div>
                     </div>
 
-                    {/* Local Equivalent */}
+                    {/* Currency Estimates */}
                     <div className="space-y-3">
-                      <h4 className="font-medium text-foreground">Local Impact Value:</h4>
+                      <h4 className="font-medium text-foreground">{t('donate.impactPreview.converted')}</h4>
+                      <div className="bg-muted/50 rounded-lg p-4 border border-border/60 space-y-2">
+                        {currencies.filter(c => c.code !== selectedCurrency).slice(0, 2).map((currency) => (
+                          <div key={currency.code} className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">{currency.flag} {currency.code}:</span>
+                            <span className="font-medium">
+                              {Math.round(numericAmount * selectedCurrencyData.exchangeRate / currency.exchangeRate).toLocaleString()} {currency.symbol}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Local Impact */}
+                    <div className="space-y-3">
+                      <h4 className="font-medium text-foreground">{t('donate.impactPreview.currency')} Impact:</h4>
                       <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg p-4 border border-primary/20">
-                        <div className="text-2xl font-bold text-primary">
+                        <div className="text-xl font-bold text-primary">
                           {equivalentAmount.toLocaleString()} MRU
                         </div>
-                        <div className="text-sm text-muted-foreground">
-                          Mauritanian Ouguiya
+                        <div className="text-xs text-muted-foreground">
+                          {t('donate.impactPreview.localPower')}
                         </div>
                       </div>
                     </div>
@@ -502,34 +560,119 @@ const Donate = () => {
 
                   {/* Impact Breakdown */}
                   <div className="mt-6">
-                    <h4 className="font-medium text-foreground mb-4">This donation provides:</h4>
+                    <h4 className="font-medium text-foreground mb-4">{t('donate.impactPreview.provides')}</h4>
                     <div className="grid grid-cols-2 md:grid-cols-4 mobile-gap">
                       <div className="text-center bg-white rounded-lg p-4 border border-border/60">
                         <Utensils className="h-6 w-6 mx-auto mb-2 text-accent" />
                         <div className="font-semibold text-accent">{impact.meals}</div>
-                        <div className="text-xs text-muted-foreground">Meals</div>
+                        <div className="text-xs text-muted-foreground">{t('donate.impactPreview.meals')}</div>
                       </div>
                       <div className="text-center bg-white rounded-lg p-4 border border-border/60">
                         <Droplets className="h-6 w-6 mx-auto mb-2 text-primary" />
                         <div className="font-semibold text-primary">{impact.water}L</div>
-                        <div className="text-xs text-muted-foreground">Clean Water</div>
+                        <div className="text-xs text-muted-foreground">{t('donate.impactPreview.water')}</div>
                       </div>
                       <div className="text-center bg-white rounded-lg p-4 border border-border/60">
                         <TreePine className="h-6 w-6 mx-auto mb-2 text-secondary" />
                         <div className="font-semibold text-secondary">{impact.waste}kg</div>
-                        <div className="text-xs text-muted-foreground">Waste Removed</div>
+                        <div className="text-xs text-muted-foreground">{t('donate.impactPreview.waste')}</div>
                       </div>
                       <div className="text-center bg-white rounded-lg p-4 border border-border/60">
                         <Users className="h-6 w-6 mx-auto mb-2 text-accent" />
                         <div className="font-semibold text-accent">{impact.families}</div>
-                        <div className="text-xs text-muted-foreground">Families Helped</div>
+                        <div className="text-xs text-muted-foreground">{t('donate.impactPreview.families')}</div>
                       </div>
                     </div>
+                  </div>
+                </div>
+
+                {/* Payment Methods */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-4 flex items-center">
+                    <CreditCard className="h-5 w-5 mr-2 text-primary" />
+                    {t('donate.payment.title')}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <button
+                      onClick={() => setSelectedPaymentMethod('bankily')}
+                      className={`p-4 rounded-xl border-2 transition-all duration-300 transform hover:scale-105 ${
+                        selectedPaymentMethod === 'bankily'
+                          ? 'border-primary bg-gradient-to-br from-primary/20 to-primary/10 shadow-lg'
+                          : 'border-border bg-card hover:border-primary/50 hover:shadow-md'
+                      }`}
+                    >
+                      <div className="text-center">
+                        <div className="text-2xl mb-2">📱</div>
+                        <div className="font-semibold text-sm">{t('donate.payment.bankily')}</div>
+                        <div className="text-xs opacity-75 mt-1">{t('donate.payment.bankilyDescription')}</div>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => setSelectedPaymentMethod('stripe')}
+                      className={`p-4 rounded-xl border-2 transition-all duration-300 transform hover:scale-105 ${
+                        selectedPaymentMethod === 'stripe'
+                          ? 'border-primary bg-gradient-to-br from-primary/20 to-primary/10 shadow-lg'
+                          : 'border-border bg-card hover:border-primary/50 hover:shadow-md'
+                      }`}
+                    >
+                      <div className="text-center">
+                        <div className="text-2xl mb-2">💳</div>
+                        <div className="font-semibold text-sm">{t('donate.payment.credit')}</div>
+                        <div className="text-xs opacity-75 mt-1">{t('donate.payment.creditDescription')}</div>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => setSelectedPaymentMethod('paypal')}
+                      className={`p-4 rounded-xl border-2 transition-all duration-300 transform hover:scale-105 ${
+                        selectedPaymentMethod === 'paypal'
+                          ? 'border-primary bg-gradient-to-br from-primary/20 to-primary/10 shadow-lg'
+                          : 'border-border bg-card hover:border-primary/50 hover:shadow-md'
+                      }`}
+                    >
+                      <div className="text-center">
+                        <div className="text-2xl mb-2">🅿️</div>
+                        <div className="font-semibold text-sm">{t('donate.payment.paypal')}</div>
+                        <div className="text-xs opacity-75 mt-1">{t('donate.payment.paypalDescription')}</div>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => setSelectedPaymentMethod('wise')}
+                      className={`p-4 rounded-xl border-2 transition-all duration-300 transform hover:scale-105 ${
+                        selectedPaymentMethod === 'wise'
+                          ? 'border-primary bg-gradient-to-br from-primary/20 to-primary/10 shadow-lg'
+                          : 'border-border bg-card hover:border-primary/50 hover:shadow-md'
+                      }`}
+                    >
+                      <div className="text-center">
+                        <div className="text-2xl mb-2">🌍</div>
+                        <div className="font-semibold text-sm">{t('donate.payment.wise')}</div>
+                        <div className="text-xs opacity-75 mt-1">{t('donate.payment.wiseDescription')}</div>
+                      </div>
+                    </button>
                   </div>
                 </div>
               </div>
             </CardContent>
           </Card>
+
+          {/* Link to Impact & Transparency */}
+          <div className="text-center mt-8">
+            <Card className="max-w-2xl mx-auto border-0 shadow-lg bg-gradient-to-br from-card via-card to-muted/20">
+              <CardContent className="p-6 text-center">
+                <Shield className="h-8 w-8 mx-auto mb-3 text-primary" />
+                <h3 className="text-lg font-bold mb-2 text-foreground">{t('donate.model.title')}</h3>
+                <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                  {t('donate.model.description')}
+                </p>
+                <Button asChild variant="outline" size="sm">
+                  <a href="/impact" className="flex items-center justify-center">
+{t('donate.model.viewImpact')}
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </a>
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
 
@@ -542,24 +685,32 @@ const Donate = () => {
         <div className="max-w-3xl mx-auto container-padding relative z-10">
           <div className="text-center mb-8 md:mb-10">
             <Badge className="mb-4 px-6 py-2 bg-green-600 text-white border-0 rounded-full text-sm font-semibold shadow-xl">
-              Mobile Money Donation
+              {selectedPaymentMethod === 'bankily' ? t('donate.mobile.title') : 
+               selectedPaymentMethod === 'stripe' ? t('donate.credit.title') :
+               selectedPaymentMethod === 'paypal' ? t('donate.paypal.donation') : t('donate.wise.transfer')}
             </Badge>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4 text-white">
-              Donate via Bankily
+              {donationType === 'monthly' ? t('donate.monthlyDonation') : t('donate.frequency.onetime')} {selectedPaymentMethod === 'bankily' ? t('donate.mobile.title').split(' ').slice(1).join(' ') : selectedPaymentMethod === 'stripe' ? t('donate.credit.title').split(' ').slice(1).join(' ') : selectedPaymentMethod === 'paypal' ? t('donate.paypal.donation').split(' ').slice(1).join(' ') : t('donate.wise.transfer').split(' ').slice(1).join(' ')}
             </h2>
             <p className="text-lg text-white/90 leading-relaxed">
-              Transfer your donation of <span className="font-semibold text-secondary">{numericAmount.toLocaleString()} {selectedCurrencyData.symbol}</span> 
+              {donationType === 'monthly' ? t('donate.setupRecurring') : t('donate.makeA')} {selectedPaymentMethod === 'bankily' ? t('donate.mobile.title').split(' ').slice(1).join(' ') : selectedPaymentMethod === 'stripe' ? t('donate.credit.title').split(' ').slice(1).join(' ') : selectedPaymentMethod === 'paypal' ? t('donate.paypal.donation').split(' ').slice(1).join(' ') : t('donate.wise.transfer').split(' ').slice(1).join(' ')} {t('donate.of')} <span className="font-semibold text-secondary">{numericAmount.toLocaleString()} {selectedCurrencyData.symbol}</span>
               {selectedCurrency !== 'MRU' && (
                 <span className="block text-sm mt-1">
                   (≈ {equivalentAmount.toLocaleString()} MRU local impact)
                 </span>
               )}
             </p>
+            <div className="mt-4 text-sm text-white/80 bg-white/10 rounded-lg p-3 max-w-2xl mx-auto">
+              <CheckCircle className="h-4 w-4 inline mr-2" />
+{t('donate.mobile.receipt')}
+            </div>
           </div>
           
           <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-2xl">
             <CardContent className="p-6 md:p-8 lg:p-10 space-y-6">
                             <div className="space-y-6">
+                {selectedPaymentMethod === 'bankily' && (
+                  <>
                 {/* Bankily Payment Instructions */}
                 <div className="bg-gradient-to-br from-green-50 via-muted/30 to-green-50 p-6 md:p-8 rounded-xl border border-green-200">
                   <div className="flex items-center mb-4">
@@ -567,8 +718,8 @@ const Donate = () => {
                       <Smartphone className="h-6 w-6 text-white" />
                     </div>
                     <div>
-                      <span className="font-bold text-green-800 text-lg md:text-xl">Pay with Bankily</span>
-                      <p className="text-sm text-green-700">Secure mobile money transfer</p>
+                      <span className="font-bold text-green-800 text-lg md:text-xl">{t('donate.mobile.pay')}</span>
+                      <p className="text-sm text-green-700">{t('donate.mobile.secure')}</p>
                     </div>
                   </div>
                   
@@ -577,71 +728,71 @@ const Donate = () => {
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center">
                           <Phone className="h-5 w-5 text-green-600 mr-2" />
-                          <span className="font-medium text-gray-800">Transfer to:</span>
+                          <span className="font-medium text-gray-800">{t('donate.mobile.transferTo')}</span>
                         </div>
                         <button
                           type="button"
-                          className="flex items-center px-3 py-1 text-xs bg-green-100 text-green-700 rounded-full hover:bg-green-200 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:ring-offset-1"
-                          onClick={(e) => {
+                              className="flex items-center px-3 py-1 text-xs bg-green-100 text-green-700 rounded-full hover:bg-green-200 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:ring-offset-1"
+                              onClick={(e) => {
                             navigator.clipboard.writeText('+222 43727240');
                             toast({
-                              title: "Copied!",
-                              description: "Phone number copied to clipboard",
+                              title: t('donate.phone.copied'),
+                              description: t('donate.phone.copiedDescription'),
                             });
-                            // Remove focus after click to prevent outline from staying
-                            e.currentTarget.blur();
+                                // Remove focus after click to prevent outline from staying
+                                e.currentTarget.blur();
                           }}
                         >
                           <Copy className="h-3 w-3 mr-1" />
-                          Copy
+                          {t('donate.mobile.copy')}
                         </button>
                       </div>
-                      <a 
-                        href="tel:+22243727240" 
-                        className="text-2xl font-bold text-green-800 tracking-wider hover:text-green-700 transition-colors cursor-pointer"
-                      >
-                        +222 43727240
-                      </a>
+                          <a 
+                            href="tel:+22243727240" 
+                            className="text-2xl font-bold text-green-800 tracking-wider hover:text-green-700 transition-colors cursor-pointer"
+                          >
+                            +222 43727240
+                          </a>
                     </div>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {/* Instructions */}
                       <div className="space-y-3">
-                        <h4 className="font-semibold text-green-800 mb-2">How to send via Bankily:</h4>
+                        <h4 className="font-semibold text-green-800 mb-2">{t('donate.mobile.instructions')}</h4>
                         <div className="space-y-2 text-sm text-green-700">
                           <div className="flex items-start">
                             <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 mr-2 flex-shrink-0" />
-                            <span>Open your Bankily app and select "Send Money"</span>
+                            <span>{t('donate.mobile.step1')}</span>
                           </div>
                           <div className="flex items-start">
                             <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 mr-2 flex-shrink-0" />
-                            <span>Enter the phone number: <strong>+222 43727240</strong></span>
+                            <span>{t('donate.mobile.step2')}</span>
                           </div>
                           <div className="flex items-start">
                             <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 mr-2 flex-shrink-0" />
-                            <span>Enter your donation amount: <strong>{equivalentAmount.toLocaleString()} MRU</strong></span>
+                                <span>{t('donate.mobile.step3')}</span>
                           </div>
                           <div className="flex items-start">
                             <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 mr-2 flex-shrink-0" />
-                            <span>Add "Zakia Relief Donation" in the reference/note field</span>
+                            <span>{t('donate.mobile.step4')}</span>
                           </div>
                           <div className="flex items-start">
                             <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 mr-2 flex-shrink-0" />
-                            <span>Confirm and complete your transfer</span>
+                            <span>{t('donate.mobile.step5')}</span>
                           </div>
                         </div>
                       </div>
 
                       {/* QR Code */}
                       <div className="space-y-3">
-                        <h4 className="font-semibold text-green-800 mb-2">Or scan QR code:</h4>
+                        <h4 className="font-semibold text-green-800 mb-2">{t('donate.mobile.or')}</h4>
                         <div className="bg-white rounded-lg p-4 border border-green-100 text-center">
                           <img 
                             src="/bankily_qr_code.jpeg" 
-                            alt="Bankily QR Code for Zakia Relief donations"
+                            alt={t('donate.mobile.qrAlt')}
                             className="w-48 h-48 mx-auto object-contain rounded-lg shadow-sm"
                           />
-                          <p className="text-xs text-gray-600 mt-2">Scan with Bankily app</p>
+                          <p className="text-xs text-gray-600 mt-2">{t('donate.mobile.qrDescription')}</p>
                         </div>
                       </div>
                     </div>
@@ -660,58 +811,123 @@ const Donate = () => {
                       // Show instructions based on device type
                       if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                         toast({
-                          title: "Phone Number Copied!",
-                          description: "Now open your Bankily app and send to +222 43727240 with reference: Zakia Relief Donation",
+                          title: t('donate.phone.copiedTitle'),
+                          description: t('donate.phone.mobileInstructions'),
                         });
                       } else {
                         toast({
-                          title: "Phone Number Copied!",
-                          description: "Please open Bankily on your mobile device and send to +222 43727240",
+                          title: t('donate.phone.copiedTitle'),
+                          description: t('donate.phone.desktopInstructions'),
                         });
                       }
                     }}
                   >
                     <Copy className="h-5 w-5 mr-2" />
-                    Copy Phone Number for Bankily
+{t('donate.mobile.copyPhone')}
                   </Button>
                   
-
-                  
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <p className="text-sm text-blue-800">
-                      <strong>Currency Note:</strong> Bankily transfers are in MRU. 
-                      Your {numericAmount.toLocaleString()} {selectedCurrencyData.symbol} donation 
-                      equals {equivalentAmount.toLocaleString()} MRU for maximum local impact.
-                    </p>
-                  </div>
-                  
-                  {/* Security & Trust */}
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                    <div className="flex items-start space-x-3">
-                      <Shield className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <h4 className="font-semibold text-green-800 mb-1">Secure & Transparent</h4>
-                        <p className="text-sm text-green-700">
-                          • 100% of donations go directly to programs<br/>
-                          • Bankily is a trusted mobile money platform<br/>
-                          • All transactions are secure and traceable<br/>
-                          • Regular impact reports provided to donors
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <p className="text-sm text-blue-800">
+                          <strong>{t('donate.mobile.currencyNote').split(':')[0]}:</strong> {t('donate.mobile.currencyNote').split(':')[1]}
                         </p>
                       </div>
-                    </div>
-                  </div>
+                      
+                      {/* Security & Trust */}
+                      <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                        <div className="flex items-start space-x-3">
+                          <Shield className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <h4 className="font-semibold text-green-800 mb-1">{t('donate.secure.title')}</h4>
+                            <p className="text-sm text-green-700">
+                              • {t('donate.secure.point1')}<br/>
+                              • {t('donate.secure.point2')}<br/>
+                              • {t('donate.secure.point3')}<br/>
+                              • {t('donate.secure.point4')}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                   
                   <p className="text-center text-sm text-muted-foreground">
-                    Copy the phone number, then use Bankily app or scan the QR code to send your donation
+                    {t('donate.secure.instruction')}
                   </p>
                 </div>
+                  </>
+                )}
+
+                {selectedPaymentMethod === 'stripe' && (
+                  <div className="bg-gradient-to-br from-blue-50 via-muted/30 to-blue-50 p-6 md:p-8 rounded-xl border border-blue-200">
+                    <div className="flex items-center mb-4">
+                      <div className="p-3 bg-blue-600 rounded-lg mr-4">
+                        <CreditCard className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <span className="font-bold text-blue-800 text-lg md:text-xl">{t('donate.credit.pay')}</span>
+                        <p className="text-sm text-blue-700">{t('donate.credit.secure')}</p>
+                      </div>
+                    </div>
+                    <div className="text-center py-8">
+                      <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4">
+                        <CreditCard className="h-5 w-5 mr-2" />
+{t('donate.pay')} {numericAmount.toLocaleString()} {selectedCurrencyData.symbol} {donationType === 'monthly' ? t('donate.monthlySuffix') : ''}
+                      </Button>
+                      <p className="text-sm text-blue-700 mt-4">
+{t('donate.credit.ssl')}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {selectedPaymentMethod === 'paypal' && (
+                  <div className="bg-gradient-to-br from-yellow-50 via-muted/30 to-yellow-50 p-6 md:p-8 rounded-xl border border-yellow-200">
+                    <div className="flex items-center mb-4">
+                      <div className="p-3 bg-yellow-600 rounded-lg mr-4">
+                        <Globe className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <span className="font-bold text-yellow-800 text-lg md:text-xl">{t('donate.paypal.pay')}</span>
+                        <p className="text-sm text-yellow-700">{t('donate.paypal.international')}</p>
+                      </div>
+                    </div>
+                    <div className="text-center py-8">
+                      <Button size="lg" className="bg-yellow-600 hover:bg-yellow-700 text-white px-8 py-4">
+                        <Globe className="h-5 w-5 mr-2" />
+{t('donate.pay')} {numericAmount.toLocaleString()} {selectedCurrencyData.symbol} {donationType === 'monthly' ? t('donate.monthlySuffix') : ''}
+                      </Button>
+                      <p className="text-sm text-yellow-700 mt-4">
+{t('donate.paypal.protection')}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {selectedPaymentMethod === 'wise' && (
+                  <div className="bg-gradient-to-br from-purple-50 via-muted/30 to-purple-50 p-6 md:p-8 rounded-xl border border-purple-200">
+                    <div className="flex items-center mb-4">
+                      <div className="p-3 bg-purple-600 rounded-lg mr-4">
+                        <TrendingUp className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <span className="font-bold text-purple-800 text-lg md:text-xl">{t('donate.wise.pay')}</span>
+                        <p className="text-sm text-purple-700">{t('donate.wise.rates')}</p>
+                      </div>
+                    </div>
+                    <div className="text-center py-8">
+                      <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-4">
+                        <TrendingUp className="h-5 w-5 mr-2" />
+{t('donate.pay')} {numericAmount.toLocaleString()} {selectedCurrencyData.symbol} {donationType === 'monthly' ? t('donate.monthlySuffix') : ''}
+                      </Button>
+                      <p className="text-sm text-purple-700 mt-4">
+{t('donate.wise.direct')}
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
         </div>
       </section>
-
-
     </div>
   );
 };

@@ -3,80 +3,99 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Utensils, Droplets, TreePine, Users, Heart, Target, ArrowRight, CheckCircle, Building2, UserPlus, TrendingUp } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
 import beachCleanup1 from '/beach_cleanup_1.jpg';
 import foodDonation1 from '/food_donation_1.jpg';
 import waterDonation1 from '/water_donation_1.jpg';
 
 const OurWork = () => {
+  const { t, language } = useLanguage();
+  
   const milestones = [
     {
       year: "2018",
-      title: "Foundation Established",
-      description: "Zakia Relief was founded with a vision to uplift vulnerable communities in Mauritania through sustainable development and community-driven solutions.",
+      title: t('work.timeline.2018.title'),
+      description: t('work.timeline.2018.description'),
       icon: Building2,
-      impact: "Organization founded",
+      impact: t('work.timeline.2018.impact'),
       color: "from-primary/20 to-primary/5"
     },
     {
       year: "2019",
-      title: "First Community Kitchen",
-      description: "Launched our first feeding program, serving 50 families weekly with nutritious meals and establishing the foundation of our food security mission.",
+      title: t('work.timeline.2019.title'),
+      description: t('work.timeline.2019.description'),
       icon: Utensils,
-      impact: "50 families served weekly",
+      impact: t('work.timeline.2019.impact'),
       color: "from-secondary/20 to-secondary/5"
     },
     {
       year: "2020",
-      title: "Water Access Project",
-      description: "Initiated clean water programs during challenging times, installing our first community water points and beginning our life-changing water delivery services.",
+      title: t('work.timeline.2020.title'),
+      description: t('work.timeline.2020.description'),
       icon: Droplets,
-      impact: "First water points installed",
+      impact: t('work.timeline.2020.impact'),
       color: "from-accent/20 to-accent/5"
     },
     {
       year: "2021",
-      title: "Environmental Initiative",
-      description: "Expanded to include community clean-up and environmental education programs, addressing the critical need for sustainable environmental stewardship.",
+      title: t('work.timeline.2021.title'),
+      description: t('work.timeline.2021.description'),
       icon: TreePine,
-      impact: "Environmental programs launched",
+      impact: t('work.timeline.2021.impact'),
       color: "from-primary/20 to-primary/5"
     },
     {
       year: "2022",
-      title: "Partnership Growth",
-      description: "Formed strategic partnerships with local organizations, international donors, and community leaders to amplify our impact and reach more families in need.",
+      title: t('work.timeline.2022.title'),
+      description: t('work.timeline.2022.description'),
       icon: UserPlus,
-      impact: "Strategic partnerships formed",
+      impact: t('work.timeline.2022.impact'),
       color: "from-secondary/20 to-secondary/5"
     },
     {
       year: "2023",
-      title: "Major Water Impact",
-      description: "Achieved our most significant milestone: delivering over 300 tons of clean water to communities across Nouakchott, directly impacting hundreds of families.",
+      title: t('work.timeline.2023.title'),
+      description: t('work.timeline.2023.description'),
       icon: TrendingUp,
-      impact: "300+ tons of water delivered",
+      impact: t('work.timeline.2023.impact'),
       color: "from-accent/20 to-accent/5"
     }
   ];
 
   const programs = [
     {
+      programKey: 'food',
       icon: Utensils,
-      title: "Feeding the Community",
-      description: "Fighting hunger by providing nutritious meals to families in need throughout Nouakchott.",
+      title: t('work.programs.food.title'),
+      description: t('work.programs.food.description'),
+      locations: t('work.programs.food.locations'),
       details: [
         "Weekly food distribution to 200+ families",
         "Emergency meal programs during Ramadan",
         "Nutritional support for children and elderly",
         "Community kitchen initiatives"
       ],
-      impact: "8,000+ meals served in 2023",
+      impact: t('work.programs.food.impact'),
+      outcomes: [
+        t('work.programs.food.outcome1'),
+        t('work.programs.food.outcome2'),
+        t('work.programs.food.outcome3')
+      ],
+      costs: {
+        perUnit: t('work.programs.food.costPerUnit'),
+        weeklyFamily: t('work.programs.food.weeklyFamily'),
+        volunteerHours: t('work.programs.food.volunteerHours')
+      },
+      story: t('work.programs.food.story'),
+      photoCaption: t('work.programs.food.photoCaption'),
       color: "from-primary/20 to-primary/5"
     },
     {
+      programKey: 'water',
       icon: Droplets,
-      title: "Providing Clean Water",
-      description: "Ensuring access to safe, clean drinking water for underserved communities.",
+      title: t('work.programs.water.title'),
+      description: t('work.programs.water.description'),
+      locations: t('work.programs.water.locations'),
       details: [
         "Installation of community water points",
         "Water filtration system maintenance",
@@ -84,32 +103,58 @@ const OurWork = () => {
         "Emergency water distribution",
         "Mobile water delivery services"
       ],
-      impact: "300+ tons of water delivered",
+      impact: t('work.programs.water.impact'),
+      outcomes: [
+        t('work.programs.water.outcome1'),
+        t('work.programs.water.outcome2'),
+        t('work.programs.water.outcome3')
+      ],
+      costs: {
+        perUnit: t('work.programs.water.costPerUnit'),
+        weeklyFamily: t('work.programs.water.weeklyFamily'),
+        volunteerHours: t('work.programs.water.volunteerHours')
+      },
+      story: t('work.programs.water.story'),
+      photoCaption: t('work.programs.water.photoCaption'),
       color: "from-secondary/20 to-secondary/5"
     },
     {
+      programKey: 'environment',
       icon: TreePine,
-      title: "Cleaning the Community",
-      description: "Environmental stewardship through community clean-up drives and education.",
+      title: t('work.programs.environment.title'),
+      description: t('work.programs.environment.description'),
+      locations: t('work.programs.environment.locations'),
       details: [
         "Monthly neighborhood clean-up events",
         "Waste management education programs",
         "Tree planting initiatives",
         "Recycling awareness campaigns"
       ],
-      impact: "15 tons of waste removed in 2023",
+      impact: t('work.programs.environment.impact'),
+      outcomes: [
+        t('work.programs.environment.outcome1'),
+        t('work.programs.environment.outcome2'),
+        t('work.programs.environment.outcome3')
+      ],
+      costs: {
+        perUnit: t('work.programs.environment.costPerUnit'),
+        weeklyFamily: t('work.programs.environment.weeklyFamily'),
+        volunteerHours: t('work.programs.environment.volunteerHours')
+      },
+      story: t('work.programs.environment.story'),
+      photoCaption: t('work.programs.environment.photoCaption'),
       color: "from-accent/20 to-accent/5"
     }
   ];
 
   const stats = [
-    { icon: Users, value: "500+", label: "Families Served" },
-    { icon: Heart, value: "6 Years", label: "Since 2018" },
-    { icon: Target, value: "3", label: "Core Programs" }
+    { icon: Users, value: t('work.stats.familiesValue'), label: t('work.stats.familiesServed') },
+    { icon: Heart, value: t('work.stats.yearsValue'), label: t('work.stats.yearsSince') },
+    { icon: Target, value: t('work.stats.programsValue'), label: t('work.stats.corePrograms') }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30" dir={language === 'ar' ? 'rtl' : 'ltr'}>
       {/* Hero Section */}
       <section className="relative community-gradient text-white py-12 md:py-16 lg:py-20 overflow-hidden">
         {/* Background decorations */}
@@ -119,14 +164,13 @@ const OurWork = () => {
         <div className="max-w-6xl mx-auto container-padding relative z-10">
           <div className="text-center">
             <Badge className="mb-4 md:mb-6 px-6 py-2 gold-gradient text-white border-0 rounded-full text-sm font-semibold shadow-xl">
-              Our Programs
+              {t('work.badge')}
             </Badge>
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight">
-              Our Work in <span className="text-secondary bg-gradient-to-r from-secondary to-secondary/80 bg-clip-text text-transparent drop-shadow-lg">Action</span>
+              {t('work.title').split(' ').slice(0, 3).join(' ')} <span className="text-secondary bg-gradient-to-r from-secondary to-secondary/80 bg-clip-text text-transparent drop-shadow-lg">{t('work.title').split(' ').slice(3).join(' ')}</span>
             </h1>
             <p className="text-lg md:text-xl lg:text-2xl mb-8 md:mb-10 max-w-4xl mx-auto opacity-95 leading-relaxed font-light">
-              Through three core programs, we're building stronger, healthier communities 
-              across Nouakchott, Mauritania.
+              {t('work.subtitle')}
             </p>
             
             {/* Stats */}
@@ -153,13 +197,13 @@ const OurWork = () => {
         <div className="relative z-10">
           <div className="text-center mb-10 md:mb-14">
             <Badge className="mb-4 px-6 py-2 community-gradient text-white border-0 rounded-full text-sm font-semibold">
-              Program Details
+              {t('work.programDetails.badge')}
             </Badge>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-5 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-              How We Make Impact
+              {t('work.programDetails.title')}
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Each program addresses critical community needs with sustainable solutions and measurable results.
+              {t('work.programDetails.subtitle')}
             </p>
           </div>
           
@@ -189,61 +233,98 @@ const OurWork = () => {
                       </CardHeader>
                       
                       <div className="space-y-6">
+                        {/* Location Badge */}
+                        <div className="flex items-center space-x-2">
+                          <Badge variant="outline" className="text-xs">
+                            📍 {program.locations}
+                          </Badge>
+                        </div>
+
+                        {/* Impact Badge */}
                         <Badge className="community-gradient text-white border-0 px-6 py-3 text-sm md:text-base font-semibold rounded-full shadow-md group-hover:shadow-lg transition-shadow duration-300">
                           {program.impact}
                         </Badge>
-                        
-                        <ul className="space-y-3">
-                          {program.details.map((detail, i) => (
-                            <li key={i} className="flex items-start group/item">
-                              <CheckCircle className="h-5 w-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-300" />
-                              <span className="text-sm md:text-base leading-relaxed text-muted-foreground group-hover:text-foreground transition-colors duration-300">{detail}</span>
-                            </li>
-                          ))}
-                        </ul>
+
+                        {/* Cost Table */}
+                        <div className="bg-muted/50 rounded-lg p-4">
+                          <h4 className="font-semibold mb-3 text-sm">{t('work.programDetails.costsTitle')}</h4>
+                          <div className="space-y-2 text-xs">
+                            <div className="flex justify-between">
+                              <span>{t('work.programDetails.costPerUnit')}</span>
+                              <span className="font-medium">{program.costs.perUnit}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>{t('work.programDetails.weeklyFamilySupport')}</span>
+                              <span className="font-medium">{program.costs.weeklyFamily}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>{t('work.programDetails.volunteerHours')}</span>
+                              <span className="font-medium">{program.costs.volunteerHours}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Outcomes */}
+                        <div>
+                          <h4 className="font-semibold mb-3 text-sm">{t('work.programDetails.measuredOutcomes')}</h4>
+                          <ul className="space-y-2">
+                            {program.outcomes.map((outcome, i) => (
+                              <li key={i} className="flex items-start group/item">
+                                <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 mr-2 flex-shrink-0" />
+                                <span className="text-xs leading-relaxed text-muted-foreground">{outcome}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        {/* Micro-story */}
+                        <div className="bg-primary/5 rounded-lg p-4">
+                          <h4 className="font-semibold mb-2 text-sm">{t('work.programDetails.communityStory')}</h4>
+                          <p className="text-xs leading-relaxed text-muted-foreground italic">"{program.story}"</p>
+                        </div>
                       </div>
                     </div>
                     
                     <div className={`bg-gradient-to-br ${program.color} relative overflow-hidden h-96 md:h-[32rem]`}>
-                      {program.title === "Feeding the Community" ? (
+                      {program.programKey === "food" ? (
                         <>
                           <img 
                             src={foodDonation1} 
-                            alt="Food donation and community feeding" 
+                            alt="Food security program in Nouakchott communities" 
                             className="w-full h-full object-cover object-center group-hover:scale-105 transition-all duration-500"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                           <div className="absolute bottom-0 left-0 right-0 text-center p-4">
                             <p className="text-white text-sm md:text-base leading-relaxed font-medium drop-shadow-lg">
-                              Community food distribution in action
+                              {program.photoCaption}
                             </p>
                           </div>
                         </>
-                      ) : program.title === "Providing Clean Water" ? (
+                      ) : program.programKey === "water" ? (
                         <>
                           <img 
                             src={waterDonation1} 
-                            alt="Water donation and clean water access" 
+                            alt="Clean water access program in Nouakchott districts" 
                             className="w-full h-full object-cover object-bottom group-hover:scale-105 transition-all duration-500"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                           <div className="absolute bottom-0 left-0 right-0 text-center p-4">
                             <p className="text-white text-sm md:text-base leading-relaxed font-medium drop-shadow-lg">
-                              Clean water distribution in action
+                              {program.photoCaption}
                             </p>
                           </div>
                         </>
-                      ) : program.title === "Cleaning the Community" ? (
+                      ) : program.programKey === "environment" ? (
                         <>
                           <img 
                             src={beachCleanup1} 
-                            alt="Beach cleanup community work" 
+                            alt="Environmental care program in Nouakchott neighborhoods" 
                             className="w-full h-full object-cover object-center group-hover:scale-105 transition-all duration-500"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                           <div className="absolute bottom-0 left-0 right-0 text-center p-4">
                             <p className="text-white text-sm md:text-base leading-relaxed font-medium drop-shadow-lg">
-                              Community beach cleanup in action
+                              {program.photoCaption}
                             </p>
                           </div>
                         </>
@@ -258,7 +339,7 @@ const OurWork = () => {
                                 <program.icon className="h-24 w-24 md:h-32 md:w-32 text-primary mx-auto mb-6 opacity-30 group-hover:opacity-40 group-hover:scale-110 transition-all duration-500 relative z-10" />
                               </div>
                               <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
-                                Program imagery and community photos showcasing our impact in action.
+                                {t('work.programDetails.programImagery')}
                               </p>
                             </div>
                           </div>
@@ -282,11 +363,11 @@ const OurWork = () => {
         <div className="max-w-6xl mx-auto container-padding relative z-10">
           <div className="text-center mb-10 md:mb-14">
             <Badge className="mb-4 px-6 py-2 gold-gradient text-white border-0 rounded-full text-sm font-semibold shadow-xl">
-              Timeline
+              {t('work.timeline.badge')}
             </Badge>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-5 text-white">Our Journey</h2>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-5 text-white">{t('work.timeline.title')}</h2>
             <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
-              From our humble beginnings to major community impact, discover the milestones that have shaped our work and expanded our programs.
+              {t('work.timeline.subtitle')}
             </p>
           </div>
           
@@ -354,14 +435,13 @@ const OurWork = () => {
                       <Target className="h-6 w-6 md:h-7 md:w-7 text-secondary" />
                     </div>
                     <CardTitle className="text-xl md:text-2xl text-foreground">
-                      Looking Forward
+                      {t('work.timeline.2024.title')}
                     </CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent className="pt-0">
                   <p className="text-sm md:text-base leading-relaxed text-muted-foreground">
-                    Continuing our mission to serve even more families, expand our water delivery program, 
-                    and create lasting sustainable change across Mauritania. Join us as we write the next chapter of our journey.
+                    {t('work.timeline.2024.description')}
                   </p>
                 </CardContent>
               </Card>
@@ -379,25 +459,24 @@ const OurWork = () => {
           
           <div className="max-w-4xl mx-auto text-center relative z-10">
             <Badge className="mb-4 px-6 py-2 community-gradient text-white border-0 rounded-full text-sm font-semibold">
-              Take Action
+              {t('work.cta.badge')}
             </Badge>
             <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-5 md:mb-7 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent leading-tight">
-              Join Us in Making a Difference
+              {t('work.cta.title')}
             </h2>
             <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground mb-6 md:mb-8 leading-relaxed font-light">
-              Every contribution helps us expand our reach and deepen our impact 
-              in the communities that need it most.
+              {t('work.cta.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center">
               <Button asChild size="lg" className="community-gradient text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 px-6 py-3">
                 <NavLink to="/donate" className="flex items-center justify-center">
                   <Heart className="h-5 w-5 md:h-6 md:w-6 mr-2" />
-                  Support Our Work
+                  {t('work.cta.support')}
                 </NavLink>
               </Button>
               <Button asChild size="lg" variant="outline" className="btn-outline text-primary hover:text-white hover:bg-primary shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 px-6 py-3">
                 <NavLink to="/get-involved" className="flex items-center justify-center">
-                  Volunteer With Us
+                  {t('work.cta.volunteer')}
                   <ArrowRight className="h-5 w-5 md:h-6 md:w-6 ml-2" />
                 </NavLink>
               </Button>

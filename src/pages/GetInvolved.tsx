@@ -8,10 +8,12 @@ import { Users, Clock, Heart, Megaphone, Handshake, Calendar, ArrowRight, CheckC
 import { NavLink } from 'react-router-dom';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '../contexts/LanguageContext';
 import emailjs from '@emailjs/browser';
 
 const GetInvolved = () => {
   const { toast } = useToast();
+  const { t, language } = useLanguage();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -25,195 +27,200 @@ const GetInvolved = () => {
   const [emailTouched, setEmailTouched] = useState(false);
   const [selectedCountryCode, setSelectedCountryCode] = useState('+222');
 
-  // Country codes data
+  // Helper function to get translated country name
+  const getCountryName = (countryKey: string) => {
+    return t(`countries.${countryKey}`);
+  };
+
+  // Country codes data with translation keys
   const countryCodes = [
-    { code: '+222', country: 'Mauritania', flag: '🇲🇷' },
-    { code: '+1', country: 'United States', flag: '🇺🇸' },
-    { code: '+33', country: 'France', flag: '🇫🇷' },
-    { code: '+44', country: 'United Kingdom', flag: '🇬🇧' },
-    { code: '+49', country: 'Germany', flag: '🇩🇪' },
-    { code: '+34', country: 'Spain', flag: '🇪🇸' },
-    { code: '+39', country: 'Italy', flag: '🇮🇹' },
-    { code: '+31', country: 'Netherlands', flag: '🇳🇱' },
-    { code: '+32', country: 'Belgium', flag: '🇧🇪' },
-    { code: '+41', country: 'Switzerland', flag: '🇨🇭' },
-    { code: '+46', country: 'Sweden', flag: '🇸🇪' },
-    { code: '+47', country: 'Norway', flag: '🇳🇴' },
-    { code: '+45', country: 'Denmark', flag: '🇩🇰' },
-    { code: '+358', country: 'Finland', flag: '🇫🇮' },
-    { code: '+351', country: 'Portugal', flag: '🇵🇹' },
-    { code: '+30', country: 'Greece', flag: '🇬🇷' },
-    { code: '+90', country: 'Turkey', flag: '🇹🇷' },
-    { code: '+7', country: 'Russia', flag: '🇷🇺' },
-    { code: '+86', country: 'China', flag: '🇨🇳' },
-    { code: '+81', country: 'Japan', flag: '🇯🇵' },
-    { code: '+82', country: 'South Korea', flag: '🇰🇷' },
-    { code: '+91', country: 'India', flag: '🇮🇳' },
-    { code: '+92', country: 'Pakistan', flag: '🇵🇰' },
-    { code: '+880', country: 'Bangladesh', flag: '🇧🇩' },
-    { code: '+94', country: 'Sri Lanka', flag: '🇱🇰' },
-    { code: '+977', country: 'Nepal', flag: '🇳🇵' },
-    { code: '+975', country: 'Bhutan', flag: '🇧🇹' },
-    { code: '+960', country: 'Maldives', flag: '🇲🇻' },
-    { code: '+20', country: 'Egypt', flag: '🇪🇬' },
-    { code: '+212', country: 'Morocco', flag: '🇲🇦' },
-    { code: '+213', country: 'Algeria', flag: '🇩🇿' },
-    { code: '+216', country: 'Tunisia', flag: '🇹🇳' },
-    { code: '+218', country: 'Libya', flag: '🇱🇾' },
-    { code: '+220', country: 'Gambia', flag: '🇬🇲' },
-    { code: '+221', country: 'Senegal', flag: '🇸🇳' },
-    { code: '+223', country: 'Mali', flag: '🇲🇱' },
-    { code: '+224', country: 'Guinea', flag: '🇬🇳' },
-    { code: '+225', country: 'Ivory Coast', flag: '🇨🇮' },
-    { code: '+226', country: 'Burkina Faso', flag: '🇧🇫' },
-    { code: '+227', country: 'Niger', flag: '🇳🇪' },
-    { code: '+228', country: 'Togo', flag: '🇹🇬' },
-    { code: '+229', country: 'Benin', flag: '🇧🇯' },
-    { code: '+230', country: 'Mauritius', flag: '🇲🇺' },
-    { code: '+231', country: 'Liberia', flag: '🇱🇷' },
-    { code: '+232', country: 'Sierra Leone', flag: '🇸🇱' },
-    { code: '+233', country: 'Ghana', flag: '🇬🇭' },
-    { code: '+234', country: 'Nigeria', flag: '🇳🇬' },
-    { code: '+235', country: 'Chad', flag: '🇹🇩' },
-    { code: '+236', country: 'Central African Republic', flag: '🇨🇫' },
-    { code: '+237', country: 'Cameroon', flag: '🇨🇲' },
-    { code: '+238', country: 'Cape Verde', flag: '🇨🇻' },
-    { code: '+239', country: 'São Tomé and Príncipe', flag: '🇸🇹' },
-    { code: '+240', country: 'Equatorial Guinea', flag: '🇬🇶' },
-    { code: '+241', country: 'Gabon', flag: '🇬🇦' },
-    { code: '+242', country: 'Republic of the Congo', flag: '🇨🇬' },
-    { code: '+243', country: 'Democratic Republic of the Congo', flag: '🇨🇩' },
-    { code: '+244', country: 'Angola', flag: '🇦🇴' },
-    { code: '+245', country: 'Guinea-Bissau', flag: '🇬🇼' },
-    { code: '+246', country: 'British Indian Ocean Territory', flag: '🇮🇴' },
-    { code: '+248', country: 'Seychelles', flag: '🇸🇨' },
-    { code: '+249', country: 'Sudan', flag: '🇸🇩' },
-    { code: '+250', country: 'Rwanda', flag: '🇷🇼' },
-    { code: '+251', country: 'Ethiopia', flag: '🇪🇹' },
-    { code: '+252', country: 'Somalia', flag: '🇸🇴' },
-    { code: '+253', country: 'Djibouti', flag: '🇩🇯' },
-    { code: '+254', country: 'Kenya', flag: '🇰🇪' },
-    { code: '+255', country: 'Tanzania', flag: '🇹🇿' },
-    { code: '+256', country: 'Uganda', flag: '🇺🇬' },
-    { code: '+257', country: 'Burundi', flag: '🇧🇮' },
-    { code: '+258', country: 'Mozambique', flag: '🇲🇿' },
-    { code: '+260', country: 'Zambia', flag: '🇿🇲' },
-    { code: '+261', country: 'Madagascar', flag: '🇲🇬' },
-    { code: '+262', country: 'Réunion', flag: '🇷🇪' },
-    { code: '+263', country: 'Zimbabwe', flag: '🇿🇼' },
-    { code: '+264', country: 'Namibia', flag: '🇳🇦' },
-    { code: '+265', country: 'Malawi', flag: '🇲🇼' },
-    { code: '+266', country: 'Lesotho', flag: '🇱🇸' },
-    { code: '+267', country: 'Botswana', flag: '🇧🇼' },
-    { code: '+268', country: 'Swaziland', flag: '🇸🇿' },
-    { code: '+269', country: 'Comoros', flag: '🇰🇲' },
-    { code: '+290', country: 'Saint Helena', flag: '🇸🇭' },
-    { code: '+291', country: 'Eritrea', flag: '🇪🇷' },
-    { code: '+297', country: 'Aruba', flag: '🇦🇼' },
-    { code: '+298', country: 'Faroe Islands', flag: '🇫🇴' },
-    { code: '+299', country: 'Greenland', flag: '🇬🇱' },
-    { code: '+350', country: 'Gibraltar', flag: '🇬🇮' },
-    { code: '+351', country: 'Portugal', flag: '🇵🇹' },
-    { code: '+352', country: 'Luxembourg', flag: '🇱🇺' },
-    { code: '+353', country: 'Ireland', flag: '🇮🇪' },
-    { code: '+354', country: 'Iceland', flag: '🇮🇸' },
-    { code: '+355', country: 'Albania', flag: '🇦🇱' },
-    { code: '+356', country: 'Malta', flag: '🇲🇹' },
-    { code: '+357', country: 'Cyprus', flag: '🇨🇾' },
-    { code: '+358', country: 'Finland', flag: '🇫🇮' },
-    { code: '+359', country: 'Bulgaria', flag: '🇧🇬' },
-    { code: '+370', country: 'Lithuania', flag: '🇱🇹' },
-    { code: '+371', country: 'Latvia', flag: '🇱🇻' },
-    { code: '+372', country: 'Estonia', flag: '🇪🇪' },
-    { code: '+373', country: 'Moldova', flag: '🇲🇩' },
-    { code: '+374', country: 'Armenia', flag: '🇦🇲' },
-    { code: '+375', country: 'Belarus', flag: '🇧🇾' },
-    { code: '+376', country: 'Andorra', flag: '🇦🇩' },
-    { code: '+377', country: 'Monaco', flag: '🇲🇨' },
-    { code: '+378', country: 'San Marino', flag: '🇸🇲' },
-    { code: '+380', country: 'Ukraine', flag: '🇺🇦' },
-    { code: '+381', country: 'Serbia', flag: '🇷🇸' },
-    { code: '+382', country: 'Montenegro', flag: '🇲🇪' },
-    { code: '+383', country: 'Kosovo', flag: '🇽🇰' },
-    { code: '+385', country: 'Croatia', flag: '🇭🇷' },
-    { code: '+386', country: 'Slovenia', flag: '🇸🇮' },
-    { code: '+387', country: 'Bosnia and Herzegovina', flag: '🇧🇦' },
-    { code: '+389', country: 'North Macedonia', flag: '🇲🇰' },
-    { code: '+420', country: 'Czech Republic', flag: '🇨🇿' },
-    { code: '+421', country: 'Slovakia', flag: '🇸🇰' },
-    { code: '+423', country: 'Liechtenstein', flag: '🇱🇮' },
-    { code: '+500', country: 'Falkland Islands', flag: '🇫🇰' },
-    { code: '+501', country: 'Belize', flag: '🇧🇿' },
-    { code: '+502', country: 'Guatemala', flag: '🇬🇹' },
-    { code: '+503', country: 'El Salvador', flag: '🇸🇻' },
-    { code: '+504', country: 'Honduras', flag: '🇭🇳' },
-    { code: '+505', country: 'Nicaragua', flag: '🇳🇮' },
-    { code: '+506', country: 'Costa Rica', flag: '🇨🇷' },
-    { code: '+507', country: 'Panama', flag: '🇵🇦' },
-    { code: '+508', country: 'Saint Pierre and Miquelon', flag: '🇵🇲' },
-    { code: '+509', country: 'Haiti', flag: '🇭🇹' },
-    { code: '+590', country: 'Guadeloupe', flag: '🇬🇵' },
-    { code: '+591', country: 'Bolivia', flag: '🇧🇴' },
-    { code: '+592', country: 'Guyana', flag: '🇬🇾' },
-    { code: '+593', country: 'Ecuador', flag: '🇪🇨' },
-    { code: '+594', country: 'French Guiana', flag: '🇬🇫' },
-    { code: '+595', country: 'Paraguay', flag: '🇵🇾' },
-    { code: '+596', country: 'Martinique', flag: '🇲🇶' },
-    { code: '+597', country: 'Suriname', flag: '🇸🇷' },
-    { code: '+598', country: 'Uruguay', flag: '🇺🇾' },
-    { code: '+599', country: 'Netherlands Antilles', flag: '🇧🇶' },
-    { code: '+670', country: 'East Timor', flag: '🇹🇱' },
-    { code: '+672', country: 'Antarctica', flag: '🇦🇶' },
-    { code: '+673', country: 'Brunei', flag: '🇧🇳' },
-    { code: '+674', country: 'Nauru', flag: '🇳🇷' },
-    { code: '+675', country: 'Papua New Guinea', flag: '🇵🇬' },
-    { code: '+676', country: 'Tonga', flag: '🇹🇴' },
-    { code: '+677', country: 'Solomon Islands', flag: '🇸🇧' },
-    { code: '+678', country: 'Vanuatu', flag: '🇻🇺' },
-    { code: '+679', country: 'Fiji', flag: '🇫🇯' },
-    { code: '+680', country: 'Palau', flag: '🇵🇼' },
-    { code: '+681', country: 'Wallis and Futuna', flag: '🇼🇫' },
-    { code: '+682', country: 'Cook Islands', flag: '🇨🇰' },
-    { code: '+683', country: 'Niue', flag: '🇳🇺' },
-    { code: '+684', country: 'American Samoa', flag: '🇦🇸' },
-    { code: '+685', country: 'Samoa', flag: '🇼🇸' },
-    { code: '+686', country: 'Kiribati', flag: '🇰🇮' },
-    { code: '+687', country: 'New Caledonia', flag: '🇳🇨' },
-    { code: '+688', country: 'Tuvalu', flag: '🇹🇻' },
-    { code: '+689', country: 'French Polynesia', flag: '🇵🇫' },
-    { code: '+690', country: 'Tokelau', flag: '🇹🇰' },
-    { code: '+691', country: 'Micronesia', flag: '🇫🇲' },
-    { code: '+692', country: 'Marshall Islands', flag: '🇲🇭' },
-    { code: '+850', country: 'North Korea', flag: '🇰🇵' },
-    { code: '+852', country: 'Hong Kong', flag: '🇭🇰' },
-    { code: '+853', country: 'Macau', flag: '🇲🇴' },
-    { code: '+855', country: 'Cambodia', flag: '🇰🇭' },
-    { code: '+856', country: 'Laos', flag: '🇱🇦' },
-    { code: '+880', country: 'Bangladesh', flag: '🇧🇩' },
-    { code: '+886', country: 'Taiwan', flag: '🇹🇼' },
-    { code: '+960', country: 'Maldives', flag: '🇲🇻' },
-    { code: '+961', country: 'Lebanon', flag: '🇱🇧' },
-    { code: '+962', country: 'Jordan', flag: '🇯🇴' },
-    { code: '+963', country: 'Syria', flag: '🇸🇾' },
-    { code: '+964', country: 'Iraq', flag: '🇮🇶' },
-    { code: '+965', country: 'Kuwait', flag: '🇰🇼' },
-    { code: '+966', country: 'Saudi Arabia', flag: '🇸🇦' },
-    { code: '+967', country: 'Yemen', flag: '🇾🇪' },
-    { code: '+968', country: 'Oman', flag: '🇴🇲' },
-    { code: '+970', country: 'Palestine', flag: '🇵🇸' },
-    { code: '+971', country: 'United Arab Emirates', flag: '🇦🇪' },
-    { code: '+972', country: 'Israel', flag: '🇮🇱' },
-    { code: '+973', country: 'Bahrain', flag: '🇧🇭' },
-    { code: '+974', country: 'Qatar', flag: '🇶🇦' },
-    { code: '+975', country: 'Bhutan', flag: '🇧🇹' },
-    { code: '+976', country: 'Mongolia', flag: '🇲🇳' },
-    { code: '+977', country: 'Nepal', flag: '🇳🇵' },
-    { code: '+992', country: 'Tajikistan', flag: '🇹🇯' },
-    { code: '+993', country: 'Turkmenistan', flag: '🇹🇲' },
-    { code: '+994', country: 'Azerbaijan', flag: '🇦🇿' },
-    { code: '+995', country: 'Georgia', flag: '🇬🇪' },
-    { code: '+996', country: 'Kyrgyzstan', flag: '🇰🇬' },
-    { code: '+998', country: 'Uzbekistan', flag: '🇺🇿' }
+    { code: '+222', countryKey: 'mauritania', flag: '🇲🇷' },
+    { code: '+1', countryKey: 'unitedStates', flag: '🇺🇸' },
+    { code: '+33', countryKey: 'france', flag: '🇫🇷' },
+    { code: '+44', countryKey: 'unitedKingdom', flag: '🇬🇧' },
+    { code: '+49', countryKey: 'germany', flag: '🇩🇪' },
+    { code: '+34', countryKey: 'spain', flag: '🇪🇸' },
+    { code: '+39', countryKey: 'italy', flag: '🇮🇹' },
+    { code: '+31', countryKey: 'netherlands', flag: '🇳🇱' },
+    { code: '+32', countryKey: 'belgium', flag: '🇧🇪' },
+    { code: '+41', countryKey: 'switzerland', flag: '🇨🇭' },
+    { code: '+46', countryKey: 'sweden', flag: '🇸🇪' },
+    { code: '+47', countryKey: 'norway', flag: '🇳🇴' },
+    { code: '+45', countryKey: 'denmark', flag: '🇩🇰' },
+    { code: '+358', countryKey: 'finland', flag: '🇫🇮' },
+    { code: '+351', countryKey: 'portugal', flag: '🇵🇹' },
+    { code: '+30', countryKey: 'greece', flag: '🇬🇷' },
+    { code: '+90', countryKey: 'turkey', flag: '🇹🇷' },
+    { code: '+7', countryKey: 'russia', flag: '🇷🇺' },
+    { code: '+86', countryKey: 'china', flag: '🇨🇳' },
+    { code: '+81', countryKey: 'japan', flag: '🇯🇵' },
+    { code: '+82', countryKey: 'southKorea', flag: '🇰🇷' },
+    { code: '+91', countryKey: 'india', flag: '🇮🇳' },
+    { code: '+92', countryKey: 'pakistan', flag: '🇵🇰' },
+    { code: '+880', countryKey: 'bangladesh', flag: '🇧🇩' },
+    { code: '+94', countryKey: 'sriLanka', flag: '🇱🇰' },
+    { code: '+977', countryKey: 'nepal', flag: '🇳🇵' },
+    { code: '+975', countryKey: 'bhutan', flag: '🇧🇹' },
+    { code: '+960', countryKey: 'maldives', flag: '🇲🇻' },
+    { code: '+20', countryKey: 'egypt', flag: '🇪🇬' },
+    { code: '+212', countryKey: 'morocco', flag: '🇲🇦' },
+    { code: '+213', countryKey: 'algeria', flag: '🇩🇿' },
+    { code: '+216', countryKey: 'tunisia', flag: '🇹🇳' },
+    { code: '+218', countryKey: 'libya', flag: '🇱🇾' },
+    { code: '+220', countryKey: 'gambia', flag: '🇬🇲' },
+    { code: '+221', countryKey: 'senegal', flag: '🇸🇳' },
+    { code: '+223', countryKey: 'mali', flag: '🇲🇱' },
+    { code: '+224', countryKey: 'guinea', flag: '🇬🇳' },
+    { code: '+225', countryKey: 'ivoryCoast', flag: '🇨🇮' },
+    { code: '+226', countryKey: 'burkinaFaso', flag: '🇧🇫' },
+    { code: '+227', countryKey: 'niger', flag: '🇳🇪' },
+    { code: '+228', countryKey: 'togo', flag: '🇹🇬' },
+    { code: '+229', countryKey: 'benin', flag: '🇧🇯' },
+    { code: '+230', countryKey: 'mauritius', flag: '🇲🇺' },
+    { code: '+231', countryKey: 'liberia', flag: '🇱🇷' },
+    { code: '+232', countryKey: 'sierraLeone', flag: '🇸🇱' },
+    { code: '+233', countryKey: 'ghana', flag: '🇬🇭' },
+    { code: '+234', countryKey: 'nigeria', flag: '🇳🇬' },
+    { code: '+235', countryKey: 'chad', flag: '🇹🇩' },
+    { code: '+236', countryKey: 'centralAfricanRepublic', flag: '🇨🇫' },
+    { code: '+237', countryKey: 'cameroon', flag: '🇨🇲' },
+    { code: '+238', countryKey: 'capeVerde', flag: '🇨🇻' },
+    { code: '+239', countryKey: 'saoTomeAndPrincipe', flag: '🇸🇹' },
+    { code: '+240', countryKey: 'equatorialGuinea', flag: '🇬🇶' },
+    { code: '+241', countryKey: 'gabon', flag: '🇬🇦' },
+    { code: '+242', countryKey: 'republicOfTheCongo', flag: '🇨🇬' },
+    { code: '+243', countryKey: 'democraticRepublicOfTheCongo', flag: '🇨🇩' },
+    { code: '+244', countryKey: 'angola', flag: '🇦🇴' },
+    { code: '+245', countryKey: 'guineaBissau', flag: '🇬🇼' },
+    { code: '+246', countryKey: 'britishIndianOceanTerritory', flag: '🇮🇴' },
+    { code: '+248', countryKey: 'seychelles', flag: '🇸🇨' },
+    { code: '+249', countryKey: 'sudan', flag: '🇸🇩' },
+    { code: '+250', countryKey: 'rwanda', flag: '🇷🇼' },
+    { code: '+251', countryKey: 'ethiopia', flag: '🇪🇹' },
+    { code: '+252', countryKey: 'somalia', flag: '🇸🇴' },
+    { code: '+253', countryKey: 'djibouti', flag: '🇩🇯' },
+    { code: '+254', countryKey: 'kenya', flag: '🇰🇪' },
+    { code: '+255', countryKey: 'tanzania', flag: '🇹🇿' },
+    { code: '+256', countryKey: 'uganda', flag: '🇺🇬' },
+    { code: '+257', countryKey: 'burundi', flag: '🇧🇮' },
+    { code: '+258', countryKey: 'mozambique', flag: '🇲🇿' },
+    { code: '+260', countryKey: 'zambia', flag: '🇿🇲' },
+    { code: '+261', countryKey: 'madagascar', flag: '🇲🇬' },
+    { code: '+262', countryKey: 'reunion', flag: '🇷🇪' },
+    { code: '+263', countryKey: 'zimbabwe', flag: '🇿🇼' },
+    { code: '+264', countryKey: 'namibia', flag: '🇳🇦' },
+    { code: '+265', countryKey: 'malawi', flag: '🇲🇼' },
+    { code: '+266', countryKey: 'lesotho', flag: '🇱🇸' },
+    { code: '+267', countryKey: 'botswana', flag: '🇧🇼' },
+    { code: '+268', countryKey: 'swaziland', flag: '🇸🇿' },
+    { code: '+269', countryKey: 'comoros', flag: '🇰🇲' },
+    { code: '+290', countryKey: 'saintHelena', flag: '🇸🇭' },
+    { code: '+291', countryKey: 'eritrea', flag: '🇪🇷' },
+    { code: '+297', countryKey: 'aruba', flag: '🇦🇼' },
+    { code: '+298', countryKey: 'faroeIslands', flag: '🇫🇴' },
+    { code: '+299', countryKey: 'greenland', flag: '🇬🇱' },
+    { code: '+350', countryKey: 'gibraltar', flag: '🇬🇮' },
+    { code: '+351', countryKey: 'portugal', flag: '🇵🇹' },
+    { code: '+352', countryKey: 'luxembourg', flag: '🇱🇺' },
+    { code: '+353', countryKey: 'ireland', flag: '🇮🇪' },
+    { code: '+354', countryKey: 'iceland', flag: '🇮🇸' },
+    { code: '+355', countryKey: 'albania', flag: '🇦🇱' },
+    { code: '+356', countryKey: 'malta', flag: '🇲🇹' },
+    { code: '+357', countryKey: 'cyprus', flag: '🇨🇾' },
+    { code: '+358', countryKey: 'finland', flag: '🇫🇮' },
+    { code: '+359', countryKey: 'bulgaria', flag: '🇧🇬' },
+    { code: '+370', countryKey: 'lithuania', flag: '🇱🇹' },
+    { code: '+371', countryKey: 'latvia', flag: '🇱🇻' },
+    { code: '+372', countryKey: 'estonia', flag: '🇪🇪' },
+    { code: '+373', countryKey: 'moldova', flag: '🇲🇩' },
+    { code: '+374', countryKey: 'armenia', flag: '🇦🇲' },
+    { code: '+375', countryKey: 'belarus', flag: '🇧🇾' },
+    { code: '+376', countryKey: 'andorra', flag: '🇦🇩' },
+    { code: '+377', countryKey: 'monaco', flag: '🇲🇨' },
+    { code: '+378', countryKey: 'sanMarino', flag: '🇸🇲' },
+    { code: '+380', countryKey: 'ukraine', flag: '🇺🇦' },
+    { code: '+381', countryKey: 'serbia', flag: '🇷🇸' },
+    { code: '+382', countryKey: 'montenegro', flag: '🇲🇪' },
+    { code: '+383', countryKey: 'kosovo', flag: '🇽🇰' },
+    { code: '+385', countryKey: 'croatia', flag: '🇭🇷' },
+    { code: '+386', countryKey: 'slovenia', flag: '🇸🇮' },
+    { code: '+387', countryKey: 'bosniaAndHerzegovina', flag: '🇧🇦' },
+    { code: '+389', countryKey: 'northMacedonia', flag: '🇲🇰' },
+    { code: '+420', countryKey: 'czechRepublic', flag: '🇨🇿' },
+    { code: '+421', countryKey: 'slovakia', flag: '🇸🇰' },
+    { code: '+423', countryKey: 'liechtenstein', flag: '🇱🇮' },
+    { code: '+500', countryKey: 'falklandIslands', flag: '🇫🇰' },
+    { code: '+501', countryKey: 'belize', flag: '🇧🇿' },
+    { code: '+502', countryKey: 'guatemala', flag: '🇬🇹' },
+    { code: '+503', countryKey: 'elSalvador', flag: '🇸🇻' },
+    { code: '+504', countryKey: 'honduras', flag: '🇭🇳' },
+    { code: '+505', countryKey: 'nicaragua', flag: '🇳🇮' },
+    { code: '+506', countryKey: 'costaRica', flag: '🇨🇷' },
+    { code: '+507', countryKey: 'panama', flag: '🇵🇦' },
+    { code: '+508', countryKey: 'saintPierreAndMiquelon', flag: '🇵🇲' },
+    { code: '+509', countryKey: 'haiti', flag: '🇭🇹' },
+    { code: '+590', countryKey: 'guadeloupe', flag: '🇬🇵' },
+    { code: '+591', countryKey: 'bolivia', flag: '🇧🇴' },
+    { code: '+592', countryKey: 'guyana', flag: '🇬🇾' },
+    { code: '+593', countryKey: 'ecuador', flag: '🇪🇨' },
+    { code: '+594', countryKey: 'frenchGuiana', flag: '🇬🇫' },
+    { code: '+595', countryKey: 'paraguay', flag: '🇵🇾' },
+    { code: '+596', countryKey: 'martinique', flag: '🇲🇶' },
+    { code: '+597', countryKey: 'suriname', flag: '🇸🇷' },
+    { code: '+598', countryKey: 'uruguay', flag: '🇺🇾' },
+    { code: '+599', countryKey: 'netherlandsAntilles', flag: '🇧🇶' },
+    { code: '+670', countryKey: 'eastTimor', flag: '🇹🇱' },
+    { code: '+672', countryKey: 'antarctica', flag: '🇦🇶' },
+    { code: '+673', countryKey: 'brunei', flag: '🇧🇳' },
+    { code: '+674', countryKey: 'nauru', flag: '🇳🇷' },
+    { code: '+675', countryKey: 'papuaNewGuinea', flag: '🇵🇬' },
+    { code: '+676', countryKey: 'tonga', flag: '🇹🇴' },
+    { code: '+677', countryKey: 'solomonIslands', flag: '🇸🇧' },
+    { code: '+678', countryKey: 'vanuatu', flag: '🇻🇺' },
+    { code: '+679', countryKey: 'fiji', flag: '🇫🇯' },
+    { code: '+680', countryKey: 'palau', flag: '🇵🇼' },
+    { code: '+681', countryKey: 'wallisAndFutuna', flag: '🇼🇫' },
+    { code: '+682', countryKey: 'cookIslands', flag: '🇨🇰' },
+    { code: '+683', countryKey: 'niue', flag: '🇳🇺' },
+    { code: '+684', countryKey: 'americanSamoa', flag: '🇦🇸' },
+    { code: '+685', countryKey: 'samoa', flag: '🇼🇸' },
+    { code: '+686', countryKey: 'kiribati', flag: '🇰🇮' },
+    { code: '+687', countryKey: 'newCaledonia', flag: '🇳🇨' },
+    { code: '+688', countryKey: 'tuvalu', flag: '🇹🇻' },
+    { code: '+689', countryKey: 'frenchPolynesia', flag: '🇵🇫' },
+    { code: '+690', countryKey: 'tokelau', flag: '🇹🇰' },
+    { code: '+691', countryKey: 'micronesia', flag: '🇫🇲' },
+    { code: '+692', countryKey: 'marshallIslands', flag: '🇲🇭' },
+    { code: '+850', countryKey: 'northKorea', flag: '🇰🇵' },
+    { code: '+852', countryKey: 'hongKong', flag: '🇭🇰' },
+    { code: '+853', countryKey: 'macau', flag: '🇲🇴' },
+    { code: '+855', countryKey: 'cambodia', flag: '🇰🇭' },
+    { code: '+856', countryKey: 'laos', flag: '🇱🇦' },
+    { code: '+880', countryKey: 'bangladesh', flag: '🇧🇩' },
+    { code: '+886', countryKey: 'taiwan', flag: '🇹🇼' },
+    { code: '+960', countryKey: 'maldives', flag: '🇲🇻' },
+    { code: '+961', countryKey: 'lebanon', flag: '🇱🇧' },
+    { code: '+962', countryKey: 'jordan', flag: '🇯🇴' },
+    { code: '+963', countryKey: 'syria', flag: '🇸🇾' },
+    { code: '+964', countryKey: 'iraq', flag: '🇮🇶' },
+    { code: '+965', countryKey: 'kuwait', flag: '🇰🇼' },
+    { code: '+966', countryKey: 'saudiArabia', flag: '🇸🇦' },
+    { code: '+967', countryKey: 'yemen', flag: '🇾🇪' },
+    { code: '+968', countryKey: 'oman', flag: '🇴🇲' },
+    { code: '+970', countryKey: 'palestine', flag: '🇵🇸' },
+    { code: '+971', countryKey: 'unitedArabEmirates', flag: '🇦🇪' },
+    { code: '+972', countryKey: 'israel', flag: '🇮🇱' },
+    { code: '+973', countryKey: 'bahrain', flag: '🇧🇭' },
+    { code: '+974', countryKey: 'qatar', flag: '🇶🇦' },
+    { code: '+975', countryKey: 'bhutan', flag: '🇧🇹' },
+    { code: '+976', countryKey: 'mongolia', flag: '🇲🇳' },
+    { code: '+977', countryKey: 'nepal', flag: '🇳🇵' },
+    { code: '+992', countryKey: 'tajikistan', flag: '🇹🇯' },
+    { code: '+993', countryKey: 'turkmenistan', flag: '🇹🇲' },
+    { code: '+994', countryKey: 'azerbaijan', flag: '🇦🇿' },
+    { code: '+995', countryKey: 'georgia', flag: '🇬🇪' },
+    { code: '+996', countryKey: 'kyrgyzstan', flag: '🇰🇬' },
+    { code: '+998', countryKey: 'uzbekistan', flag: '🇺🇿' }
   ];
 
   // Validation functions
@@ -370,34 +377,34 @@ const GetInvolved = () => {
   const opportunities = [
     {
       icon: Users,
-      title: "Community Outreach",
-      description: "Help us connect with families in need and build community relationships.",
-      commitment: "4-8 hours/week",
-      requirements: "Strong communication skills, empathy, local language proficiency",
+      title: t('involved.opportunities.community.title'),
+      description: t('involved.opportunities.community.description'),
+      commitment: t('involved.opportunities.community.time'),
+      requirements: t('involved.opportunities.community.requirementsText'),
       color: "from-primary/20 to-primary/5"
     },
     {
       icon: Handshake,
-      title: "Food Distribution",
-      description: "Assist with preparing and distributing meals to community members.",
-      commitment: "Weekend shifts",
-      requirements: "Physical ability to lift supplies, reliable transportation",
+      title: t('involved.opportunities.food.title'),
+      description: t('involved.opportunities.food.description'),
+      commitment: t('involved.opportunities.food.time'),
+      requirements: t('involved.opportunities.food.requirementsText'),
       color: "from-secondary/20 to-secondary/5"
     },
     {
       icon: Clock,
-      title: "Administrative Support",
-      description: "Help with organizing events, data entry, and program coordination.",
-      commitment: "Flexible hours",
-      requirements: "Basic computer skills, organizational abilities",
+      title: t('involved.opportunities.admin.title'),
+      description: t('involved.opportunities.admin.description'),
+      commitment: t('involved.opportunities.admin.time'),
+      requirements: t('involved.opportunities.admin.requirementsText'),
       color: "from-accent/20 to-accent/5"
     },
     {
       icon: Megaphone,
-      title: "Awareness Campaigns",
-      description: "Support our advocacy and education efforts in the community.",
-      commitment: "Event-based",
-      requirements: "Creative thinking, public speaking comfort",
+      title: t('involved.opportunities.awareness.title'),
+      description: t('involved.opportunities.awareness.description'),
+      commitment: t('involved.opportunities.awareness.time'),
+      requirements: t('involved.opportunities.awareness.requirementsText'),
       color: "from-primary/20 to-primary/5"
     }
   ];
@@ -405,25 +412,28 @@ const GetInvolved = () => {
   const partnerships = [
     {
       icon: Heart,
-      title: "Local Businesses",
-      description: "Partner with us through sponsorships, in-kind donations, or employee volunteer programs."
+      title: t('involved.partnerships.businesses.title'),
+      description: t('involved.partnerships.businesses.description'),
+      examples: t('involved.partnerships.businesses.partners').split(', ')
     },
     {
       icon: Calendar,
-      title: "Community Organizations", 
-      description: "Collaborate on joint initiatives and share resources to maximize community impact."
+      title: t('involved.partnerships.community.title'), 
+      description: t('involved.partnerships.community.description'),
+      examples: t('involved.partnerships.community.partners').split(', ')
     },
     {
       icon: Users,
-      title: "Educational Institutions",
-      description: "Engage students in service-learning opportunities and awareness programs."
+      title: t('involved.partnerships.education.title'),
+      description: t('involved.partnerships.education.description'),
+      examples: t('involved.partnerships.education.partners').split(', ')
     }
   ];
 
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30" dir={language === 'ar' ? 'rtl' : 'ltr'}>
       {/* Hero Section */}
       <section className="relative community-gradient text-white py-12 md:py-16 lg:py-20 overflow-hidden">
         {/* Background decorations */}
@@ -433,14 +443,13 @@ const GetInvolved = () => {
         <div className="max-w-6xl mx-auto container-padding relative z-10">
           <div className="text-center">
             <Badge className="mb-4 md:mb-6 px-6 py-2 gold-gradient text-white border-0 rounded-full text-sm font-semibold shadow-xl">
-              Join Our Mission
+              {t('involved.badge')}
             </Badge>
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight">
-              Get <span className="text-secondary bg-gradient-to-r from-secondary to-secondary/80 bg-clip-text text-transparent drop-shadow-lg">Involved</span>
+              {t('involved.title').split(' ').slice(0, 2).join(' ')} <span className="text-secondary bg-gradient-to-r from-secondary to-secondary/80 bg-clip-text text-transparent drop-shadow-lg">{t('involved.title').split(' ').slice(2).join(' ')}</span>
             </h1>
             <p className="text-lg md:text-xl lg:text-2xl mb-8 md:mb-10 max-w-4xl mx-auto opacity-95 leading-relaxed font-light">
-              Join our volunteer community and help us create lasting change 
-              in Mauritanian communities. Every helping hand makes a difference.
+              {t('involved.subtitle')}
             </p>
           </div>
         </div>
@@ -454,13 +463,13 @@ const GetInvolved = () => {
         <div className="relative z-10">
           <div className="text-center mb-10 md:mb-14">
             <Badge className="mb-4 px-6 py-2 community-gradient text-white border-0 rounded-full text-sm font-semibold">
-              Volunteer Roles
+              {t('involved.opportunities.badge')}
             </Badge>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-5 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-              Volunteer Opportunities
+              {t('involved.opportunities.title')}
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Choose from diverse volunteer roles that match your skills, interests, and availability.
+              {t('involved.opportunities.subtitle')}
             </p>
           </div>
           
@@ -495,7 +504,7 @@ const GetInvolved = () => {
                   </CardDescription>
                   
                   <div>
-                    <h4 className="font-semibold mb-2 text-foreground text-sm md:text-base">Requirements:</h4>
+                    <h4 className="font-semibold mb-2 text-foreground text-sm md:text-base">{t('involved.opportunities.community.requirements')}</h4>
                     <div className="flex items-start">
                       <CheckCircle className="h-4 w-4 text-primary mt-0.5 mr-2 flex-shrink-0" />
                       <p className="text-xs md:text-sm text-muted-foreground group-hover:text-foreground transition-colors duration-300 leading-relaxed">
@@ -503,6 +512,62 @@ const GetInvolved = () => {
                       </p>
                     </div>
                   </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Volunteer Expectations */}
+      <section className="py-16 md:py-20 bg-muted/30">
+        <div className="container-padding max-w-6xl mx-auto">
+          <div className="text-center mb-12 md:mb-16">
+            <Badge className="mb-4 px-6 py-2 community-gradient text-white border-0 rounded-full text-sm font-semibold">
+              {t('involved.expectations.title')}
+            </Badge>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-5 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+              {t('involved.expectations.subtitle')}
+            </h2>
+            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              {t('involved.expectations.description')}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                icon: Users,
+                title: t('involved.expectations.onboarding.title'),
+                description: t('involved.expectations.onboarding.description'),
+                color: "from-blue-500 to-blue-600"
+              },
+              {
+                icon: CheckCircle,
+                title: t('involved.expectations.training.title'),
+                description: t('involved.expectations.training.description'),
+                color: "from-green-500 to-green-600"
+              },
+              {
+                icon: Heart,
+                title: t('involved.expectations.safety.title'),
+                description: t('involved.expectations.safety.description'),
+                color: "from-purple-500 to-purple-600"
+              },
+              {
+                icon: Calendar,
+                title: t('involved.expectations.reimbursements.title'),
+                description: t('involved.expectations.reimbursements.description'),
+                color: "from-orange-500 to-orange-600"
+              }
+            ].map((item, index) => (
+              <Card key={index} className="border-0 shadow-xl bg-gradient-to-br from-card via-card to-muted/20 text-center">
+                <CardContent className="p-6">
+                  <div className={`p-3 bg-gradient-to-br ${item.color} rounded-lg w-fit mx-auto mb-4`}>
+                    <item.icon className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold mb-3 text-foreground">{item.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -519,13 +584,13 @@ const GetInvolved = () => {
         <div className="max-w-4xl mx-auto container-padding relative z-10">
           <div className="text-center mb-10 md:mb-12">
             <Badge className="mb-4 px-6 py-2 gold-gradient text-white border-0 rounded-full text-sm font-semibold shadow-xl">
-              Apply Now
+              {t('involved.form.badge')}
             </Badge>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 text-white">
-              Ready to Volunteer?
+              {t('involved.form.title')}
             </h2>
             <p className="text-lg md:text-xl text-white/90 leading-relaxed">
-              Fill out the form below and we'll get in touch to discuss how you can contribute.
+              {t('involved.form.subtitle')}
             </p>
           </div>
           
@@ -534,7 +599,7 @@ const GetInvolved = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <Label htmlFor="name" className="text-sm md:text-base font-medium">Full Name *</Label>
+                    <Label htmlFor="name" className="text-sm md:text-base font-medium">{t('involved.form.name')} *</Label>
                     <Input
                       id="name"
                       className={`mt-2 ${errors.name ? 'border-red-500 focus:border-red-500' : ''}`}
@@ -547,7 +612,7 @@ const GetInvolved = () => {
                     )}
                   </div>
                   <div>
-                    <Label htmlFor="email" className="text-sm md:text-base font-medium">Email Address *</Label>
+                    <Label htmlFor="email" className="text-sm md:text-base font-medium">{t('involved.form.email')} *</Label>
                     <Input
                       id="email"
                       type="email"
@@ -574,7 +639,7 @@ const GetInvolved = () => {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <Label htmlFor="phone" className="text-sm md:text-base font-medium">Phone Number *</Label>
+                    <Label htmlFor="phone" className="text-sm md:text-base font-medium">{t('involved.form.phone')} *</Label>
                     <div className="flex mt-2 border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 focus-within:border-primary">
                       <div className="relative">
                         <select
@@ -584,7 +649,7 @@ const GetInvolved = () => {
                         >
                           {countryCodes.map((country) => (
                             <option key={country.code} value={country.code}>
-                              {country.flag} {country.country} {country.code}
+                              {country.flag} {getCountryName(country.countryKey)} {country.code}
                             </option>
                           ))}
                         </select>
@@ -592,7 +657,7 @@ const GetInvolved = () => {
                     <Input
                       id="phone"
                         type="tel"
-                        placeholder="43727240"
+                        placeholder={t('involved.form.placeholder.phone')}
                         className={`flex-1 rounded-l-none border-0 focus:ring-0 focus:outline-none bg-white ${errors.phone ? 'border-red-500 focus:border-red-500' : ''}`}
                       value={formData.phone}
                         onChange={(e) => {
@@ -609,10 +674,10 @@ const GetInvolved = () => {
                     )}
                   </div>
                   <div>
-                    <Label htmlFor="interest" className="text-sm md:text-base font-medium">Area of Interest *</Label>
+                    <Label htmlFor="interest" className="text-sm md:text-base font-medium">{t('involved.form.interest')} *</Label>
                     <Input
                       id="interest"
-                      placeholder="e.g., Food Distribution, Community Outreach"
+                      placeholder={t('involved.form.placeholder.interest')}
                       className={`mt-2 ${errors.interest ? 'border-red-500 focus:border-red-500' : ''}`}
                       value={formData.interest}
                       onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
@@ -625,10 +690,10 @@ const GetInvolved = () => {
                 </div>
                 
                 <div>
-                  <Label htmlFor="availability" className="text-sm md:text-base font-medium">Availability *</Label>
+                  <Label htmlFor="availability" className="text-sm md:text-base font-medium">{t('involved.form.availability')} *</Label>
                   <Input
                     id="availability"
-                    placeholder="e.g., Weekends, Weekday evenings"
+                    placeholder={t('involved.form.placeholder.availability')}
                     className={`mt-2 ${errors.availability ? 'border-red-500 focus:border-red-500' : ''}`}
                     value={formData.availability}
                     onChange={(e) => setFormData({ ...formData, availability: e.target.value })}
@@ -640,7 +705,7 @@ const GetInvolved = () => {
                 </div>
                 
                 <div>
-                  <Label htmlFor="message" className="text-sm md:text-base font-medium">Tell us about yourself and why you'd like to volunteer *</Label>
+                  <Label htmlFor="message" className="text-sm md:text-base font-medium">{t('involved.form.message')} *</Label>
                   <Textarea
                     id="message"
                     rows={4}
@@ -661,7 +726,7 @@ const GetInvolved = () => {
                   className="community-gradient text-white w-full shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Send className={`h-5 w-5 mr-2 ${isSubmitting ? 'animate-pulse' : ''}`} />
-                  {isSubmitting ? 'Submitting...' : 'Submit Application'}
+                  {isSubmitting ? 'Submitting...' : t('involved.form.submit')}
                 </Button>
               </form>
             </CardContent>
@@ -674,14 +739,13 @@ const GetInvolved = () => {
         <div className="relative z-10">
           <div className="text-center mb-10 md:mb-14">
             <Badge className="mb-4 px-6 py-2 community-gradient text-white border-0 rounded-full text-sm font-semibold">
-              Partnerships
+              {t('involved.partnerships.title')}
             </Badge>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-5 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-              Partnership Opportunities
+              {t('involved.partnerships.subtitle')}
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              We welcome partnerships with organizations that share our commitment 
-              to community development and sustainable impact.
+              {t('involved.partnerships.description')}
             </p>
           </div>
           
@@ -700,21 +764,62 @@ const GetInvolved = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="relative z-10">
-                  <CardDescription className="text-sm md:text-base leading-relaxed text-muted-foreground group-hover:text-foreground transition-colors duration-300">
+                  <CardDescription className="text-sm md:text-base leading-relaxed text-muted-foreground group-hover:text-foreground transition-colors duration-300 mb-4">
                     {partnership.description}
                   </CardDescription>
+                  
+                  <div className="mt-4">
+                    <h4 className="font-semibold text-sm mb-2 text-foreground">{t('involved.partnerships.current')}</h4>
+                    <ul className="text-xs text-muted-foreground space-y-1">
+                      {partnership.examples.map((example, i) => (
+                        <li key={i} className="flex items-center">
+                          <CheckCircle className="h-3 w-3 text-green-600 mr-2 flex-shrink-0" />
+                          {example}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </CardContent>
               </Card>
             ))}
           </div>
           
-          <div className="text-center mt-10 md:mt-12">
-            <Button asChild size="lg" variant="outline" className="btn-outline text-primary hover:text-white hover:bg-primary shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 px-6 py-3">
+          <div className="text-center mt-10 md:mt-12 space-y-6">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" className="community-gradient text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 px-6 py-3">
               <NavLink to="/contact" className="flex items-center justify-center">
-                Discuss Partnership
+                  {t('involved.partnerships.cta.propose')}
                 <ArrowRight className="h-5 w-5 ml-2" />
               </NavLink>
             </Button>
+              <Button asChild size="lg" variant="outline" className="btn-outline text-primary hover:text-white hover:bg-primary shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 px-6 py-3">
+                <a href="/partnership-deck.pdf" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
+                  {t('involved.partnerships.cta.download')}
+                  <ArrowRight className="h-5 w-5 ml-2" />
+                </a>
+              </Button>
+            </div>
+            
+            <div className="max-w-2xl mx-auto">
+              <Card className="border-0 shadow-lg bg-gradient-to-br from-card via-card to-muted/20">
+                <CardContent className="p-6 text-center">
+                  <h3 className="text-lg font-bold mb-3 text-foreground">{t('involved.partnerships.form.title')}</h3>
+                  <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                    {t('involved.partnerships.form.description')}
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Input 
+                      placeholder={t('involved.partnerships.form.placeholder')} 
+                      className="flex-1"
+                    />
+                    <Button size="sm" className="community-gradient text-white">
+                      <Send className="h-4 w-4 mr-2" />
+                      {t('involved.partnerships.form.submit')}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </section>

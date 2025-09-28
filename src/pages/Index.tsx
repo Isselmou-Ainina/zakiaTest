@@ -3,43 +3,47 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Utensils, Droplets, TreePine, Users, Heart, ArrowRight, Target, Calendar, Shield, CheckCircle } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
 import teamPhoto from '/team_pic.webp';
 import teamPhoto2 from '/team_pic_2.webp';
 
 const Index = () => {
+  const { t, language } = useLanguage();
+  
   const programs = [
     {
       icon: Utensils,
-      title: "Food Security Program",
-      description: "Providing nutritious meals to families in need throughout Nouakchott communities. Fighting hunger one meal at a time.",
-      stats: "8,000+ meals served",
+      title: t('home.programs.food.title'),
+      description: t('home.programs.food.description'),
+      stats: "8,000+ " + t('home.impact.meals'),
       color: "text-accent"
     },
     {
       icon: Droplets,
-      title: "Clean Water Access",
-      description: "Sustainable water projects delivering safe, clean drinking water to underserved Mauritanian communities.",
-      stats: "300+ tons of water delivered",
+      title: t('home.programs.water.title'),
+      description: t('home.programs.water.description'),
+      stats: "300+ " + t('home.impact.water'),
       color: "text-primary"
     },
     {
       icon: TreePine,
-      title: "Environmental Care",
-      description: "Community clean-up drives and environmental education creating cleaner, healthier neighborhoods in Nouakchott.",
-      stats: "15 tons of waste removed",
+      title: t('home.programs.environment.title'),
+      description: t('home.programs.environment.description'),
+      stats: "15 " + t('home.impact.cleanups'),
       color: "text-secondary"
     }
   ];
 
   const impactStats = [
     { number: "500+", label: "Families Served", icon: Users },
-    { number: "8K+", label: "Meals Provided", icon: Utensils },
-    { number: "300+", label: "Tons of Water", icon: Droplets },
-    { number: "6", label: "Years of Service", icon: Calendar }
+    { number: "8K+", label: t('home.impact.meals'), icon: Utensils },
+    { number: "300+", label: t('home.impact.water'), icon: Droplets },
+    { number: "15", label: t('home.impact.cleanups'), icon: TreePine },
+    { number: "40", label: t('home.impact.volunteers'), icon: Users }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30" dir={language === 'ar' ? 'rtl' : 'ltr'}>
       {/* Hero Section */}
       <section className="relative text-white mobile-section overflow-hidden min-h-[85vh] flex items-center">
         {/* Background Image */}
@@ -65,41 +69,39 @@ const Index = () => {
         <div className="relative z-20 max-w-6xl mx-auto container-padding w-full">
           <div className="text-center">
             <Badge variant="secondary" className="mb-4 md:mb-6 px-6 md:px-8 py-3 md:py-4 text-sm md:text-base font-semibold gold-gradient text-white border-0 rounded-full shadow-xl backdrop-blur-sm">
-              Volunteer-led since 2018
+              {t('home.badge.volunteer')}
             </Badge>
             <h1 className="mobile-text-3xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight">
-              Leading <span className="text-secondary bg-gradient-to-r from-secondary to-secondary/80 bg-clip-text text-transparent drop-shadow-lg">Mauritania Charity</span> Since 2018
+              {t('home.title').split(' ').slice(0, 3).join(' ')} <span className="text-secondary bg-gradient-to-r from-secondary to-secondary/80 bg-clip-text text-transparent drop-shadow-lg">{t('home.title').split(' ').slice(3).join(' ')}</span>
             </h1>
             <p className="mobile-text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 max-w-4xl mx-auto opacity-95 leading-relaxed font-light min-h-[3.5rem] md:min-h-[4rem] lg:min-h-[4.5rem]">
-              Empowering <strong>Mauritanian communities</strong> through <strong>food security, clean water, and environmental care</strong>. 
-              100% volunteer-driven, transforming lives since 2018.
+              {t('home.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center mb-10 md:mb-12" role="group" aria-label="Main action buttons">
               <Button asChild size="lg" className="gold-gradient text-white hover:opacity-90 shadow-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105 backdrop-blur-sm px-6 md:px-8 py-3 md:py-4" aria-label="Donate to support our mission">
                 <NavLink to="/donate" className="flex items-center justify-center">
                   <Heart className="h-5 w-5 md:h-6 md:w-6 mr-2 md:mr-3" aria-hidden="true" />
-                  Donate Now
+                  {t('home.cta.donate')}
                 </NavLink>
               </Button>
               <Button asChild size="lg" variant="outline" className="border-white border-2 text-white hover:bg-white hover:text-primary bg-white/10 backdrop-blur-md shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 px-6 md:px-8 py-3 md:py-4" aria-label="Learn about our community programs">
                 <NavLink to="/our-work" className="flex items-center justify-center">
-                  Learn About Our Work
+                  {t('home.cta.learnWork')}
                   <ArrowRight className="h-5 w-5 md:h-6 md:w-6 ml-2 md:ml-3" aria-hidden="true" />
                 </NavLink>
               </Button>
             </div>
             
             {/* Impact Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 mobile-gap max-w-5xl mx-auto">
-              {impactStats.map((stat, index) => (
-                <div key={index} className="group">
-                  <div className="text-center bg-white/10 backdrop-blur-md rounded-2xl p-4 md:p-6 border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300 hover:bg-white/15 transform hover:-translate-y-2">
-                    <stat.icon className="h-6 w-6 md:h-8 md:w-8 mx-auto mb-2 md:mb-3 opacity-90 text-secondary group-hover:scale-110 transition-transform duration-300" />
-                    <div className="impact-stat text-white drop-shadow-lg group-hover:scale-105 transition-transform">{stat.number}</div>
-                    <div className="impact-label text-white/95 font-medium text-xs md:text-sm">{stat.label}</div>
-                  </div>
+            <div className="max-w-5xl mx-auto">
+              <div className="text-center bg-white/10 backdrop-blur-md rounded-2xl p-6 md:p-8 border border-white/20 shadow-xl mb-4">
+                <div className="text-lg md:text-xl font-semibold text-white mb-2">
+                  {t('home.impact.stats')}
                 </div>
-              ))}
+                <div className="text-sm text-white/80">
+                  {t('home.impact.lastUpdated')}
+                </div>
+              </div>
             </div>
             
             {/* Trust Signals */}
@@ -107,19 +109,19 @@ const Index = () => {
               <div className="flex flex-wrap justify-center items-center gap-6 md:gap-8 opacity-80">
                 <div className="flex items-center space-x-2 text-white/90">
                   <Shield className="h-5 w-5" />
-                  <span className="text-sm md:text-base font-medium">100% Transparent</span>
+                  <span className="text-sm md:text-base font-medium">{t('home.impact.transparent')}</span>
                 </div>
                 <div className="flex items-center space-x-2 text-white/90">
                   <CheckCircle className="h-5 w-5" />
-                  <span className="text-sm md:text-base font-medium">Verified Impact</span>
+                  <span className="text-sm md:text-base font-medium">{t('home.impact.verified')}</span>
                 </div>
                 <div className="flex items-center space-x-2 text-white/90">
                   <Users className="h-5 w-5" />
-                  <span className="text-sm md:text-base font-medium">Volunteer-Led</span>
+                  <span className="text-sm md:text-base font-medium">{t('home.impact.volunteerLed')}</span>
                 </div>
                 <div className="flex items-center space-x-2 text-white/90">
                   <Heart className="h-5 w-5" />
-                  <span className="text-sm md:text-base font-medium">Since 2018</span>
+                  <span className="text-sm md:text-base font-medium">{t('home.impact.since2018')}</span>
                 </div>
               </div>
             </div>
@@ -135,14 +137,13 @@ const Index = () => {
         <div className="relative z-10">
           <div className="text-center mb-10 md:mb-14">
             <Badge className="mb-4 px-6 py-2 community-gradient text-white border-0 rounded-full text-sm font-semibold">
-              Our Impact Areas
+              {t('home.impact.areas')}
             </Badge>
             <h2 className="mobile-text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-5 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-              Mauritania Humanitarian Programs
+              {t('home.programs.title')}
             </h2>
             <p className="mobile-text-base md:text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-              Three focused programs addressing the most critical needs of <strong>Mauritanian communities</strong> 
-              through sustainable, volunteer-led initiatives.
+              {t('home.subtitle')}
             </p>
           </div>
           
@@ -173,7 +174,7 @@ const Index = () => {
           <div className="text-center mt-10 md:mt-12">
             <Button asChild size="lg" variant="outline" className="btn-outline text-primary hover:text-white hover:bg-primary shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 px-6 py-3">
               <NavLink to="/our-work" className="flex items-center">
-                See Our Work in Detail
+                {t('home.impact.seeWork')}
                 <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </NavLink>
             </Button>
@@ -186,36 +187,35 @@ const Index = () => {
         <div className="relative z-10">
           <div className="text-center mb-12 md:mb-16">
             <Badge className="mb-4 px-6 py-2 community-gradient text-white border-0 rounded-full text-sm font-semibold">
-              Success Stories
+              {t('home.impact.stories')}
             </Badge>
             <h2 className="mobile-text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-5 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-              Success Stories from Mauritania Communities
+              {t('home.testimonials.title')}
             </h2>
             <p className="mobile-text-base md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Real stories from <strong>Mauritanian families</strong> whose lives have been transformed 
-              by our programs.
+              {t('home.impact.storiesSubtitle')}
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 mobile-gap">
             {[
               {
-                story: "Thanks to Zakia Relief's food program, my family can now have nutritious meals every day. My children are healthier and can focus better in school.",
-                author: "Fatima M.",
-                location: "Nouakchott, Mauritania",
-                program: "Food Security Program"
+                story: t('home.testimonials.food.quote'),
+                author: t('home.testimonials.food.author'),
+                location: t('home.testimonials.food.location'),
+                program: t('home.testimonials.food.title')
               },
               {
-                story: "The clean water program changed everything for our community. We no longer worry about waterborne diseases, and our children are thriving.",
-                author: "Ahmed S.",
-                location: "Nouakchott, Mauritania",
-                program: "Clean Water Access"
+                story: t('home.testimonials.water.quote'),
+                author: t('home.testimonials.water.author'),
+                location: t('home.testimonials.water.location'),
+                program: t('home.testimonials.water.title')
               },
               {
-                story: "The environmental program taught us the importance of caring for our community. Our neighborhood is now cleaner and more beautiful than ever.",
-                author: "Mariem K.",
-                location: "Nouakchott, Mauritania",
-                program: "Environmental Care"
+                story: t('home.testimonials.environment.quote'),
+                author: t('home.testimonials.environment.author'),
+                location: t('home.testimonials.environment.location'),
+                program: t('home.testimonials.environment.title')
               }
             ].map((testimonial, index) => (
               <Card key={index} className="group relative overflow-hidden border-0 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 bg-gradient-to-br from-card via-card to-muted/20 h-full">
@@ -240,6 +240,19 @@ const Index = () => {
               </Card>
             ))}
           </div>
+          
+          {/* Impact Verification */}
+          <div className="mt-12 md:mt-16 max-w-4xl mx-auto">
+            <Card className="border-0 shadow-xl bg-gradient-to-br from-card via-card to-muted/20">
+              <CardContent className="p-6 md:p-8 text-center">
+                <Shield className="h-8 w-8 mx-auto mb-4 text-primary" />
+                <h3 className="text-xl md:text-2xl font-bold mb-4 text-foreground">{t('home.verification.title')}</h3>
+                <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
+                  {t('home.verification.description')}
+                </p>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
 
@@ -253,17 +266,15 @@ const Index = () => {
           <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-6 md:p-10 lg:p-12 border border-white/20 shadow-2xl">
             <Target className="h-16 w-16 md:h-18 md:w-18 mx-auto mb-6 md:mb-7 opacity-90 text-secondary" />
             <Badge className="mb-4 px-6 py-2 gold-gradient text-white border-0 rounded-full text-sm font-semibold">
-              Our Mission
+              {t('home.mission.title')}
             </Badge>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 md:mb-7">Zakia Relief Mission Statement</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 md:mb-7">{t('home.mission.subtitle')}</h2>
             <p className="text-lg md:text-xl lg:text-2xl leading-relaxed opacity-95 mb-6 md:mb-8 font-light">
-              "To uplift vulnerable <strong>communities in Mauritania</strong> through food security, 
-              clean water access, and environmental stewardship, while fostering sustainable 
-              community development."
+              "{t('home.mission.statement')}"
             </p>
             <Button asChild size="lg" variant="outline" className="border-white/60 border-2 text-white hover:bg-white hover:text-primary bg-white/10 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 px-6 py-3">
               <NavLink to="/about" className="flex items-center">
-                Learn Our Story
+                {t('home.mission.learnStory')}
                 <ArrowRight className="h-5 w-5 ml-2" />
               </NavLink>
             </Button>
@@ -281,25 +292,24 @@ const Index = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10 items-center relative z-10">
             <div>
               <Badge className="mb-4 px-6 py-2 community-gradient text-white border-0 rounded-full text-sm font-semibold">
-                Take Action
+                {t('home.mission.takeAction')}
               </Badge>
               <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-5 md:mb-7 text-foreground leading-tight bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                Join Zakia Relief's Mission in Mauritania
+                {t('home.cta.title')}
               </h2>
               <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground mb-6 md:mb-8 leading-relaxed font-light">
-                Whether you volunteer, donate, or spread awareness, your contribution makes a real 
-                difference in the lives of <strong>families across Mauritania</strong>.
+                {t('home.cta.subtitle')}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 md:gap-6">
                 <Button asChild size="lg" className="community-gradient text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 px-6 py-3">
                   <NavLink to="/get-involved" className="flex items-center justify-center">
                     <Users className="h-5 w-5 md:h-6 md:w-6 mr-2 md:mr-3" />
-                    Volunteer With Us
+                    {t('home.cta.volunteer')}
                   </NavLink>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="btn-outline text-primary hover:text-white hover:bg-primary shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 px-6 py-3">
                   <NavLink to="/contact" className="flex items-center justify-center">
-                    Get in Touch
+                    {t('home.cta.contact')}
                     <ArrowRight className="h-5 w-5 md:h-6 md:w-6 ml-2 md:ml-3" />
                   </NavLink>
                 </Button>
@@ -310,7 +320,7 @@ const Index = () => {
               <div className="relative bg-gradient-to-br from-muted to-muted/60 rounded-3xl md:rounded-[2rem] overflow-hidden aspect-square group shadow-xl hover:shadow-2xl transition-all duration-500">
                 <img 
                   src={teamPhoto2} 
-                  alt="Zakia Relief volunteer team working in Nouakchott community providing humanitarian aid in Mauritania" 
+                  alt={t('home.cta.imageAlt')} 
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   loading="lazy"
                   title="Zakia Relief volunteers providing community support in Mauritania"
@@ -322,7 +332,7 @@ const Index = () => {
                 <div className="absolute bottom-3 left-3 right-3 md:bottom-4 md:left-4 md:right-4">
                   <div className="bg-black/80 backdrop-blur-md rounded-xl px-3 py-2 md:px-4 md:py-3 border border-white/20 shadow-2xl">
                     <p className="text-white text-xs md:text-sm leading-relaxed font-medium">
-                      Join our volunteers transforming lives through food security, clean water, and community care
+                      {t('home.cta.description')}
                     </p>
                   </div>
                 </div>

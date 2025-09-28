@@ -1,35 +1,38 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Users, Target, Award, Heart, Handshake, ArrowRight, CheckCircle, Shield } from 'lucide-react';
+import { Users, Target, Award, Heart, Handshake, ArrowRight, CheckCircle, Shield, FileText } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const About = () => {
+  const { t, language } = useLanguage();
+  
   const values = [
     {
       icon: Heart,
-      title: "Compassion",
-      description: "We lead with empathy and understanding, recognizing the dignity of every person we serve."
+      title: t('about.values.compassion.title'),
+      description: t('about.values.compassion.description')
     },
     {
       icon: Handshake,
-      title: "Community",
-      description: "We believe in the power of community-driven solutions and collaborative action."
+      title: t('about.values.community.title'),
+      description: t('about.values.community.description')
     },
     {
       icon: Target,
-      title: "Impact",
-      description: "We focus on sustainable, measurable outcomes that create lasting positive change."
+      title: t('about.values.impact.title'),
+      description: t('about.values.impact.description')
     },
     {
       icon: Award,
-      title: "Integrity",
-      description: "We operate with transparency, accountability, and unwavering ethical standards."
+      title: t('about.values.integrity.title'),
+      description: t('about.values.integrity.description')
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30" dir={language === 'ar' ? 'rtl' : 'ltr'}>
       {/* Hero Section */}
       <section className="relative community-gradient text-white mobile-section overflow-hidden">
         {/* Background decorations */}
@@ -39,24 +42,22 @@ const About = () => {
         <div className="max-w-6xl mx-auto container-padding relative z-10">
           <div className="text-center">
             <Badge className="mb-4 md:mb-6 px-6 py-2 gold-gradient text-white border-0 rounded-full text-sm font-semibold shadow-xl">
-              Our Story
+              {t('about.story.title')}
             </Badge>
             <h1 className="mobile-text-3xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight">
-              About <span className="text-secondary bg-gradient-to-r from-secondary to-secondary/80 bg-clip-text text-transparent drop-shadow-lg">Zakia Relief</span>
+              {t('about.title').split(' ').slice(0, 1).join(' ')} <span className="text-secondary bg-gradient-to-r from-secondary to-secondary/80 bg-clip-text text-transparent drop-shadow-lg">{t('about.title').split(' ').slice(1).join(' ')}</span>
             </h1>
             <p className="mobile-text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 max-w-4xl mx-auto opacity-95 leading-relaxed font-light">
-              Founded in 2018, Zakia Relief is a volunteer-driven charitable foundation 
-              that has transformed thousands of lives across Mauritania through sustainable 
-              community development and direct action.
+              {t('about.subtitle')}
             </p>
             
             {/* Key Impact Metrics */}
             <div className="grid grid-cols-2 md:grid-cols-4 mobile-gap max-w-4xl mx-auto mt-8 md:mt-12">
               {[
-                { number: "500+", label: "Families Served", icon: Users },
-                { number: "8K+", label: "Meals Provided", icon: Heart },
-                { number: "300+", label: "Tons of Water", icon: Target },
-                { number: "6", label: "Years of Service", icon: Award }
+                { number: "500+", label: t('about.story.families'), icon: Users },
+                { number: "8K+", label: t('about.story.meals'), icon: Heart },
+                { number: "300+", label: t('about.story.water'), icon: Target },
+                { number: "6", label: t('about.story.years'), icon: Award }
               ].map((stat, index) => (
                 <div key={index} className="group">
                   <div className="text-center bg-white/10 backdrop-blur-md rounded-2xl p-4 md:p-6 border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300 hover:bg-white/15 transform hover:-translate-y-2">
@@ -76,13 +77,13 @@ const About = () => {
         <div className="relative z-10">
           <div className="text-center mb-12 md:mb-16">
             <Badge className="mb-4 px-6 py-2 community-gradient text-white border-0 rounded-full text-sm font-semibold">
-              Our Purpose
+              {t('about.purpose.title')}
             </Badge>
             <h2 className="mobile-text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-5 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-              Why We Exist
+              {t('about.purpose.subtitle')}
             </h2>
             <p className="mobile-text-base md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Our mission and vision guide everything we do, from daily operations to long-term strategic planning.
+              {t('about.purpose.description')}
             </p>
           </div>
           
@@ -96,14 +97,12 @@ const About = () => {
                   <div className="mr-4 p-4 community-gradient rounded-2xl group-hover:scale-110 transition-all duration-500 shadow-lg">
                     <Target className="h-6 w-6 md:h-8 md:w-8 text-white" />
                   </div>
-                  Our Mission
+                  {t('about.mission.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-0 relative z-10">
                 <p className="text-base md:text-lg leading-relaxed text-muted-foreground group-hover:text-foreground transition-colors duration-300">
-                  To uplift vulnerable communities in Mauritania by addressing fundamental needs 
-                  through food security, clean water access, and environmental stewardship, 
-                  while fostering sustainable community development.
+                  {t('about.mission.description')}
                 </p>
               </CardContent>
             </Card>
@@ -117,14 +116,12 @@ const About = () => {
                   <div className="mr-4 p-4 community-gradient rounded-2xl group-hover:scale-110 transition-all duration-500 shadow-lg">
                     <Users className="h-6 w-6 md:h-8 md:w-8 text-white" />
                   </div>
-                  Our Vision
+                  {t('about.vision.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-0 relative z-10">
                 <p className="text-base md:text-lg leading-relaxed text-muted-foreground group-hover:text-foreground transition-colors duration-300">
-                  A future where every community in Mauritania has access to basic necessities, 
-                  lives in a clean environment, and possesses the tools and resources needed 
-                  to thrive independently.
+                  {t('about.vision.description')}
                 </p>
               </CardContent>
             </Card>
@@ -142,13 +139,13 @@ const About = () => {
           {/* Values */}
           <div className="text-center mb-12 md:mb-16">
             <Badge className="mb-4 px-6 py-2 community-gradient text-white border-0 rounded-full text-sm font-semibold">
-              Our Foundation
+              {t('about.foundation.title')}
             </Badge>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-5 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-              What Guides Us
+              {t('about.foundation.subtitle')}
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              These core values shape our approach to community service and define how we work with those we serve.
+              {t('about.foundation.description')}
             </p>
           </div>
           
@@ -184,13 +181,13 @@ const About = () => {
         <div className="max-w-6xl mx-auto container-padding relative z-10">
           <div className="text-center mb-12 md:mb-16">
             <Badge className="mb-4 px-6 py-2 gold-gradient text-white border-0 rounded-full text-sm font-semibold shadow-xl">
-              Our Team
+              {t('about.team.title')}
             </Badge>
             <h2 className="mobile-text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-5 text-white">
-              Meet Our Leadership
+              {t('about.team.subtitle')}
             </h2>
             <p className="mobile-text-base md:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
-              Dedicated leaders who guide our mission and drive positive change in Mauritanian communities.
+              {t('about.team.description')}
             </p>
           </div>
           
@@ -198,18 +195,20 @@ const About = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 mobile-gap mb-12 md:mb-16 max-w-5xl mx-auto">
             {[
               {
-                name: "Ely Boidaha",
-                title: "Co-Founder & Executive Director",
-                description: "Visionary leader who established Zakia Relief in 2018 with a commitment to sustainable community development and empowering local communities.",
+                name: t('about.leadership.ely.name'),
+                title: t('about.leadership.ely.title'),
+                description: t('about.leadership.ely.description'),
                 icon: Users,
-                isFounder: true
+                isFounder: true,
+                imageKey: 'ely'
               },
               {
-                name: "Isselmou Ainina",
-                title: "Co-Founder & Operations Director",
-                description: "Co-founded the organization with a focus on operational excellence and ensuring programs reach those who need them most.",
+                name: t('about.leadership.isselmou.name'),
+                title: t('about.leadership.isselmou.title'),
+                description: t('about.leadership.isselmou.description'),
                 icon: Target,
-                isFounder: true
+                isFounder: true,
+                imageKey: 'isselmou'
               }
             ].map((leader, index) => (
               <Card key={leader.name} className="group relative overflow-hidden bg-white/95 backdrop-blur-sm border-2 border-secondary/30 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-3">
@@ -220,7 +219,7 @@ const About = () => {
                   {/* Profile image */}
                   <div className="mx-auto w-32 h-32 md:w-36 md:h-36 rounded-full mb-6 group-hover:scale-110 transition-all duration-500 shadow-lg overflow-hidden border-4 border-white/20">
                     <img 
-                      src={leader.name === "Ely Boidaha" ? "/ely.jpeg" : "/isselmou.jpeg"} 
+                      src={leader.imageKey === "ely" ? "/ely.jpeg" : "/isselmou.jpeg"} 
                       alt={leader.name}
                       className="w-full h-full object-cover"
                     />
@@ -244,68 +243,32 @@ const About = () => {
             ))}
           </div>
 
-          {/* Leadership Team Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {[
-              {
-                name: "[Leader Name]",
-                title: "Program Director",
-                description: "Oversees our three core programs, ensuring effective delivery of food security, water access, and environmental initiatives.",
-                icon: Target
-              },
-              {
-                name: "[Leader Name]",
-                title: "Community Outreach Coordinator",
-                description: "Builds relationships with local communities and coordinates volunteer efforts across our service areas.",
-                icon: Handshake
-              },
-              {
-                name: "[Leader Name]",
-                title: "Finance & Administration Manager",
-                description: "Manages financial operations, ensures transparency, and handles administrative functions to support our mission.",
-                icon: Award
-              }
-            ].map((leader, index) => (
-              <Card key={leader.name} className="group relative overflow-hidden bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3">
-                {/* Background decoration */}
-                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-primary/5 to-transparent rounded-full transform translate-x-6 -translate-y-6"></div>
-                
-                <CardHeader className="text-center pb-4 relative z-10">
-                  {/* Profile placeholder */}
-                  <div className="mx-auto w-24 h-24 md:w-28 md:h-28 bg-gradient-to-br from-muted to-muted/60 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-all duration-500 shadow-lg overflow-hidden">
-                    <div className="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full flex items-center justify-center">
-                      <leader.icon className="h-8 w-8 md:h-10 md:w-10 text-primary opacity-60" />
-                  </div>
-                </div>
-                  
-                  <CardTitle className="text-lg md:text-xl mb-2 text-foreground group-hover:text-primary transition-colors duration-300">
-                    {leader.name}
-                  </CardTitle>
-                  
-                  <Badge className="community-gradient text-white border-0 px-4 py-2 text-xs md:text-sm font-medium rounded-full shadow-sm">
-                    {leader.title}
-                  </Badge>
-                  </CardHeader>
-                
-                <CardContent className="text-center pt-0 relative z-10">
-                  <p className="text-xs md:text-sm text-muted-foreground group-hover:text-foreground transition-colors duration-300 leading-relaxed">
-                    {leader.description}
-                  </p>
-                  </CardContent>
-                </Card>
-            ))}
+          {/* Growing Team */}
+          <div className="text-center">
+            <Card className="max-w-2xl mx-auto border-0 shadow-xl bg-gradient-to-br from-card via-card to-muted/20">
+              <CardContent className="p-8">
+                <Users className="h-12 w-12 mx-auto mb-4 text-primary" />
+                <h3 className="text-xl md:text-2xl font-bold mb-4 text-foreground">{t('about.growing.title')}</h3>
+                <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-6">
+                  {t('about.growing.description')}
+                </p>
+                <Badge className="community-gradient text-white border-0 px-6 py-2 text-sm font-medium rounded-full shadow-sm">
+                  {t('about.growing.volunteerLed')}
+                </Badge>
+              </CardContent>
+            </Card>
           </div>
           
           <div className="text-center mt-12 md:mt-16">
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-white/20 shadow-2xl max-w-4xl mx-auto">
               <CheckCircle className="h-10 w-10 md:h-12 md:w-12 mx-auto mb-4 text-secondary" />
-              <h3 className="text-xl md:text-2xl font-semibold mb-3 text-white">Join Our Leadership</h3>
+              <h3 className="text-xl md:text-2xl font-semibold mb-3 text-white">{t('about.growing.joinLeadership')}</h3>
               <p className="text-base md:text-lg text-white/90 leading-relaxed mb-6">
-                We're always looking for passionate leaders to join our mission. If you're interested in board positions or leadership roles, we'd love to hear from you.
+                {t('about.growing.cta')}
               </p>
               <Button asChild size="lg" variant="outline" className="border-white/60 border-2 text-white hover:bg-white hover:text-primary bg-white/10 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 px-6 py-3">
                 <NavLink to="/contact" className="flex items-center justify-center">
-                  Contact Leadership
+                  {t('about.growing.contact')}
                   <ArrowRight className="h-5 w-5 ml-2" />
                 </NavLink>
               </Button>
@@ -319,13 +282,13 @@ const About = () => {
         <div className="relative z-10">
           <div className="text-center mb-12 md:mb-16">
             <Badge className="mb-4 px-6 py-2 community-gradient text-white border-0 rounded-full text-sm font-semibold">
-              Our Commitment
+              {t('about.commitment.title')}
             </Badge>
             <h2 className="mobile-text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-5 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-              Transparency & Accountability
+              {t('about.commitment.transparency.title')}
             </h2>
             <p className="mobile-text-base md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              We believe in complete transparency and accountability to our donors, volunteers, and the communities we serve.
+              {t('about.commitment.transparency.description')}
             </p>
           </div>
           
@@ -333,26 +296,26 @@ const About = () => {
             {[
               {
                 icon: Shield,
-                title: "Financial Transparency",
-                description: "100% of donations go directly to programs. We maintain detailed financial records and provide regular impact reports.",
+                title: t('about.transparency.title'),
+                description: t('about.transparency.description'),
                 color: "from-green-500 to-green-600"
               },
               {
                 icon: CheckCircle,
-                title: "Verified Impact",
-                description: "All our programs are monitored and evaluated to ensure measurable, sustainable outcomes for communities.",
+                title: t('about.commitment.verified.title'),
+                description: t('about.commitment.verified.description'),
                 color: "from-blue-500 to-blue-600"
               },
               {
                 icon: Users,
-                title: "Community-Led",
-                description: "Our programs are designed and implemented with direct input from the communities we serve.",
+                title: t('about.commitment.community.title'),
+                description: t('about.commitment.community.description'),
                 color: "from-purple-500 to-purple-600"
               },
               {
                 icon: Award,
-                title: "Volunteer-Driven",
-                description: "Led entirely by volunteers, ensuring maximum efficiency and minimal overhead costs.",
+                title: t('about.commitment.volunteer.title'),
+                description: t('about.commitment.volunteer.description'),
                 color: "from-orange-500 to-orange-600"
               }
             ].map((item, index) => (
@@ -376,6 +339,151 @@ const About = () => {
         </div>
       </section>
 
+      {/* Governance & Financials */}
+      <section className="py-16 md:py-20 container-padding max-w-6xl mx-auto relative">
+        <div className="relative z-10">
+          <div className="text-center mb-12 md:mb-16">
+            <Badge className="mb-4 px-6 py-2 community-gradient text-white border-0 rounded-full text-sm font-semibold">
+              {t('about.governance.title')}
+            </Badge>
+            <h2 className="mobile-text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-5 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+              {t('about.governance.subtitle')}
+            </h2>
+            <p className="mobile-text-base md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              {t('about.governance.description')}
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 mobile-gap">
+            <Card className="border-0 shadow-xl bg-gradient-to-br from-card via-card to-muted/20">
+              <CardHeader>
+                <CardTitle className="flex items-center text-xl">
+                  <Users className="h-6 w-6 mr-3 text-primary" />
+                  {t('about.board.title')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-semibold">{t('about.board.ely.name')}</h4>
+                    <p className="text-sm text-muted-foreground">{t('about.board.ely.title')}</p>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">{t('about.board.isselmou.name')}</h4>
+                    <p className="text-sm text-muted-foreground">{t('about.board.isselmou.title')}</p>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">{t('about.board.community.title')}</h4>
+                    <p className="text-sm text-muted-foreground">{t('about.board.community.description')}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-xl bg-gradient-to-br from-card via-card to-muted/20">
+              <CardHeader>
+                <CardTitle className="flex items-center text-xl">
+                  <Shield className="h-6 w-6 mr-3 text-primary" />
+                  {t('about.financial.title')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium">{t('about.financial.program.title')}</span>
+                    <span className="text-primary font-semibold">{t('about.financial.program.value')}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium">{t('about.financial.overhead.title')}</span>
+                    <span className="text-green-600 font-semibold">{t('about.financial.overhead.value')}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium">{t('about.financial.admin.title')}</span>
+                    <span className="text-blue-600 font-semibold">{t('about.financial.admin.value')}</span>
+                  </div>
+                  <div className="mt-4 p-3 bg-muted/50 rounded-lg">
+                    <p className="text-sm text-muted-foreground">
+                      {t('about.financial.description')}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="mt-12 text-center">
+            <Card className="max-w-3xl mx-auto border-0 shadow-xl bg-gradient-to-br from-card via-card to-muted/20">
+              <CardContent className="p-8">
+                <FileText className="h-10 w-10 mx-auto mb-4 text-primary" />
+                <h3 className="text-xl font-bold mb-4">{t('about.reports.title')}</h3>
+                <p className="text-muted-foreground mb-6 leading-relaxed">
+                  {t('about.reports.description')}
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button variant="outline" className="flex items-center">
+                    <FileText className="h-4 w-4 mr-2" />
+                    {t('about.reports.annual')}
+                  </Button>
+                  <Button variant="outline" className="flex items-center">
+                    <Shield className="h-4 w-4 mr-2" />
+                    {t('about.reports.bylaws')}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Safeguarding & Ethics */}
+      <section className="py-16 md:py-20 bg-muted/30">
+        <div className="container-padding max-w-6xl mx-auto">
+          <div className="text-center mb-12 md:mb-16">
+            <Badge className="mb-4 px-6 py-2 community-gradient text-white border-0 rounded-full text-sm font-semibold">
+              {t('about.ethics.title')}
+            </Badge>
+            <h2 className="mobile-text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-5 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+              {t('about.ethics.subtitle')}
+            </h2>
+            <p className="mobile-text-base md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              {t('about.ethics.description')}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 mobile-gap">
+            <Card className="border-0 shadow-xl bg-gradient-to-br from-card via-card to-muted/20">
+              <CardContent className="p-6 text-center">
+                <Shield className="h-12 w-12 mx-auto mb-4 text-primary" />
+                <h3 className="text-lg font-bold mb-3">{t('about.ethics.anticorruption.title')}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {t('about.ethics.anticorruption.description')}
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-xl bg-gradient-to-br from-card via-card to-muted/20">
+              <CardContent className="p-6 text-center">
+                <CheckCircle className="h-12 w-12 mx-auto mb-4 text-primary" />
+                <h3 className="text-lg font-bold mb-3">{t('about.ethics.conflict.title')}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {t('about.ethics.conflict.description')}
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-xl bg-gradient-to-br from-card via-card to-muted/20">
+              <CardContent className="p-6 text-center">
+                <Users className="h-12 w-12 mx-auto mb-4 text-primary" />
+                <h3 className="text-lg font-bold mb-3">{t('about.ethics.photo.title')}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {t('about.ethics.photo.description')}
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* Call to Action */}
       <section className="py-16 md:py-20 container-padding max-w-6xl mx-auto">
         <div className="relative overflow-hidden rounded-3xl md:rounded-[2rem] bg-gradient-to-br from-card via-card to-muted/30 p-8 md:p-12 lg:p-16 shadow-2xl border border-border/60">
@@ -385,25 +493,24 @@ const About = () => {
           
           <div className="max-w-4xl mx-auto text-center relative z-10">
             <Badge className="mb-6 px-6 py-2 community-gradient text-white border-0 rounded-full text-sm font-semibold">
-              Join Us
+              {t('about.join.title')}
             </Badge>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 md:mb-8 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent leading-tight">
-            Be Part of Our Story
+            {t('about.join.subtitle')}
           </h2>
             <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground mb-8 md:mb-10 leading-relaxed font-light">
-            Join us in our mission to create lasting positive change in Mauritanian communities. 
-            Together, we can build a brighter future.
+            {t('about.join.description')}
           </p>
             <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center">
               <Button asChild size="lg" className="community-gradient text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 px-8 py-4">
                 <NavLink to="/get-involved" className="flex items-center justify-center">
                   <Heart className="h-5 w-5 md:h-6 md:w-6 mr-2 md:mr-3" />
-                  Get Involved
+                  {t('about.join.getInvolved')}
                 </NavLink>
             </Button>
               <Button asChild size="lg" variant="outline" className="btn-outline text-primary hover:text-white hover:bg-primary shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 px-8 py-4">
                 <NavLink to="/our-work" className="flex items-center justify-center">
-                  See Our Impact
+                  {t('about.join.seeImpact')}
                   <ArrowRight className="h-5 w-5 md:h-6 md:w-6 ml-2 md:ml-3" />
                 </NavLink>
             </Button>
