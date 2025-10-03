@@ -2,7 +2,7 @@
 <browserconfig>
     <msapplication>
         <tile>
-            <square150x150logo src="/zakia_transparent_logo.webp"/>
+            <square150x150logo src="/zakia_transparent_logo.png"/>
             <TileColor>#059669</TileColor>
         </tile>
     </msapplication>

@@ -14,7 +14,6 @@ import OurWork from "./pages/OurWork";
 import About from "./pages/About";
 import Impact from "./pages/Impact";
 import FAQ from "./pages/FAQ";
-import Policies from "./pages/Policies";
 import GetInvolved from "./pages/GetInvolved";
 import Donate from "./pages/Donate";
 import Contact from "./pages/Contact";
@@ -58,7 +57,6 @@ const AppContent = () => {
               <Route path="/about" element={<About />} />
               <Route path="/impact" element={<Impact />} />
               <Route path="/faq" element={<FAQ />} />
-              <Route path="/policies" element={<Policies />} />
               <Route path="/get-involved" element={<GetInvolved />} />
               <Route path="/donate" element={<Donate />} />
               <Route path="/contact" element={<Contact />} />

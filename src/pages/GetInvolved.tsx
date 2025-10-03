@@ -519,61 +519,6 @@ const GetInvolved = () => {
         </div>
       </section>
 
-      {/* Volunteer Expectations */}
-      <section className="py-16 md:py-20 bg-muted/30">
-        <div className="container-padding max-w-6xl mx-auto">
-          <div className="text-center mb-12 md:mb-16">
-            <Badge className="mb-4 px-6 py-2 community-gradient text-white border-0 rounded-full text-sm font-semibold">
-              {t('involved.expectations.title')}
-            </Badge>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-5 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-              {t('involved.expectations.subtitle')}
-            </h2>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              {t('involved.expectations.description')}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                icon: Users,
-                title: t('involved.expectations.onboarding.title'),
-                description: t('involved.expectations.onboarding.description'),
-                color: "from-blue-500 to-blue-600"
-              },
-              {
-                icon: CheckCircle,
-                title: t('involved.expectations.training.title'),
-                description: t('involved.expectations.training.description'),
-                color: "from-green-500 to-green-600"
-              },
-              {
-                icon: Heart,
-                title: t('involved.expectations.safety.title'),
-                description: t('involved.expectations.safety.description'),
-                color: "from-purple-500 to-purple-600"
-              },
-              {
-                icon: Calendar,
-                title: t('involved.expectations.reimbursements.title'),
-                description: t('involved.expectations.reimbursements.description'),
-                color: "from-orange-500 to-orange-600"
-              }
-            ].map((item, index) => (
-              <Card key={index} className="border-0 shadow-xl bg-gradient-to-br from-card via-card to-muted/20 text-center">
-                <CardContent className="p-6">
-                  <div className={`p-3 bg-gradient-to-br ${item.color} rounded-lg w-fit mx-auto mb-4`}>
-                    <item.icon className="h-6 w-6 text-white" />
-                  </div>
-                  <h3 className="text-lg font-bold mb-3 text-foreground">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Volunteer Application Form */}
       <section className="community-gradient text-white py-12 md:py-16 relative overflow-hidden">

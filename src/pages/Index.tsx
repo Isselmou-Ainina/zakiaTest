@@ -92,17 +92,6 @@ const Index = () => {
               </Button>
             </div>
             
-            {/* Impact Stats */}
-            <div className="max-w-5xl mx-auto">
-              <div className="text-center bg-white/10 backdrop-blur-md rounded-2xl p-6 md:p-8 border border-white/20 shadow-xl mb-4">
-                <div className="text-lg md:text-xl font-semibold text-white mb-2">
-                  {t('home.impact.stats')}
-                </div>
-                <div className="text-sm text-white/80">
-                  {t('home.impact.lastUpdated')}
-                </div>
-              </div>
-            </div>
             
             {/* Trust Signals */}
             <div className="mt-8 md:mt-12 max-w-4xl mx-auto">

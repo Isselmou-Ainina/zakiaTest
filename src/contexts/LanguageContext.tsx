@@ -47,7 +47,6 @@ const translations = {
     'nav.contact': 'Contact',
     'nav.donate': 'Donate',
     'nav.faq': 'FAQ',
-    'nav.policies': 'Policies',
     'nav.tagline': 'Nouakchott volunteers since 2018',
     
     // Homepage
@@ -934,9 +933,6 @@ const translations = {
     'impact.privacy.photos': 'Photo consent: All community photos are used with explicit consent. Faces may be blurred for privacy.',
     'impact.privacy.security': 'Data security: All payment processing uses SSL encryption. We retain records for 7 years for tax purposes.',
     
-    
-    // Policies Page
-    'policies.badge': 'Governance & Ethics',
     'policies.title': 'Our Policies',
     'policies.subtitle': 'We maintain the highest ethical standards in all our work. These policies protect our community, ensure transparency, and guide our daily operations.',
     
@@ -1050,7 +1046,6 @@ const translations = {
     'nav.contact': 'Contact',
     'nav.donate': 'Faire un Don',
     'nav.faq': 'FAQ',
-    'nav.policies': 'Politiques',
     'nav.tagline': 'Bénévoles de Nouakchott depuis 2018',
     
     // Homepage
@@ -2051,7 +2046,6 @@ const translations = {
     'nav.contact': 'اتصل بنا',
     'nav.donate': 'تبرع',
     'nav.faq': 'الأسئلة الشائعة',
-    'nav.policies': 'السياسات',
     'nav.tagline': 'متطوعو نواكشوط منذ 2018',
     
     // Homepage

@@ -113,14 +113,6 @@ const Footer = () => {
                   {t('nav.faq')}
                 </NavLink>
               </li>
-              <li>
-                <NavLink 
-                  to="/policies" 
-                  className="hover:text-secondary transition-gentle opacity-90 hover:opacity-100 block py-1"
-                >
-                  {t('nav.policies')}
-                </NavLink>
-              </li>
             </ul>
           </div>
 
